@@ -16,6 +16,9 @@ define("LOKASI_FOTO_GARIS", 'desa/upload/gis/garis/');
 define("LOKASI_DOKUMEN", 'desa/upload/dokumen/');
 define("LOKASI_WIDGET", 'desa/widget/');
 
+//
+define("MAX_PINDAH", 7);
+
 // Konversi tulisan kode Buku Induk Penduduk ke kode SID
 define("KODE_SEX", serialize(array("L" => "1", "Lk" => "1", "P" => "2", "Pr" => "2")));
 define("KODE_AGAMA", serialize(array(

@@ -3,6 +3,7 @@
 	function __construct(){
 		parent::__construct();
 		$this->load->model('surat_master_model');
+		$this->load->model('penduduk_model');
 	}
 
 	function list_surat(){
@@ -371,10 +372,69 @@
 	  return $buffer_out;
 	}
 
+	function get_daftar_kode_surat($surat) {
+		$kode = [];
+		switch ($surat) {
+			case 'surat_ket_pindah_penduduk':
+				$kode["alasan_pindah"] = array(
+					1 => "Pekerjaan",
+					2 => "Pendidikan",
+					3 => "Keamanan",
+					4 => "Kesehatan",
+					5 => "Perumahan",
+					6 => "Keluarga",
+					7 => "Lainnya"
+				);
+				$kode["jenis_kepindahan"] = array(
+					1 => "Kep. Keluarga",
+					2 => "Kep. Keluarga dan Seluruh Angg. Keluarga",
+					3 => "Kep. Keluarga dan Sbg. Angg. Keluarga",
+					4 => "Angg. Keluarga",
+				);
+				$kode["status_kk_pindah"] = array(
+					1 => "Numpang KK",
+					2 => "Membuat KK Baru",
+					3 => "Nomor KK Tetap"
+				);
+				break;
+
+			default:
+				# code...
+				break;
+		}
+		return $kode;
+	}
+
 	function surat_rtf_khusus($url, $input, &$buffer, $config, $individu, $ayah, $ibu) {
 		$alamat_desa = ucwords(config_item('sebutan_desa'))." ".$config[nama_desa].", Kecamatan ".$config[nama_kecamatan].", Kabupaten ".$config[nama_kabupaten];
 		// Proses surat yang membutuhkan pengambilan data khusus
 		switch ($url) {
+			case 'surat_ket_pindah_penduduk':
+				for ($i = 0; $i < MAX_PINDAH; $i++) {
+					$nomor = $i+1;
+					if ($i < count($input['id_cb'])) {
+						$nik = trim($input['id_cb'][$i],"'");
+						$penduduk = $this->penduduk_model->get_penduduk_by_nik($nik);
+						$buffer=str_replace("[pindah_no_$nomor]",$nomor,$buffer);
+						$buffer=str_replace("[pindah_nik_$nomor]",$penduduk['nik'],$buffer);
+						$buffer=str_replace("[pindah_nama_$nomor]",ucwords(strtolower($penduduk['nama'])),$buffer);
+						// $buffer=str_replace("[pindah_berlaku_ktp_$nomor]","",$buffer);
+						$buffer=str_replace("[pindah_shdk_$nomor]",$penduduk['hubungan'],$buffer);
+					} else {
+						$buffer=str_replace("[pindah_no_$nomor]","",$buffer);
+						$buffer=str_replace("[pindah_nik_$nomor]","",$buffer);
+						$buffer=str_replace("[pindah_nama_$nomor]","",$buffer);
+						$buffer=str_replace("[pindah_berlaku_ktp_$nomor]","",$buffer);
+						$buffer=str_replace("[pindah_shdk_$nomor]","",$buffer);
+					}
+					$kode = $this->get_daftar_kode_surat($url);
+					$buffer=str_replace("[alasan_pindah]",$kode['alasan_pindah'][trim($input['alasan_pindah_id'],"'")],$buffer);
+					$buffer=str_replace("[jenis_kepindahan]",$kode['jenis_kepindahan'][$input['jenis_kepindahan_id']],$buffer);
+					$buffer=str_replace("[status_kk_tidak_pindah]",$kode['status_kk_pindah'][$input['status_kk_tidak_pindah_id']],$buffer);
+					$buffer=str_replace("[status_kk_pindah]",$kode['status_kk_pindah'][$input['status_kk_pindah_id']],$buffer);
+				}
+				break;
+
 			case 'surat_persetujuan_mempelai':
 				# Data suami
 				if ($input['id_suami']) {
@@ -559,6 +619,9 @@
 			//DATA DARI KONFIGURASI DESA
 			$buffer=$this->case_replace("[sebutan_desa]",config_item('sebutan_desa'),$buffer);
 			$buffer=str_replace("[kode_desa]","$config[kode_desa]",$buffer);
+			$buffer=str_replace("[kode_kecamatan]","$config[kode_kecamatan]",$buffer);
+			$buffer=str_replace("[kode_kabupaten]","$config[kode_kabupaten]",$buffer);
+			$buffer=str_replace("[kode_provinsi]","$config[kode_propinsi]",$buffer);
 			$buffer=str_replace("[nama_kab]","$config[nama_kabupaten]",$buffer);
 			$buffer=str_replace("[nama_kabupaten]","$config[nama_kabupaten]",$buffer);
 			$buffer=str_replace("[nama_kec]","$config[nama_kecamatan]",$buffer);
@@ -575,6 +638,10 @@
 			//DATA DARI TABEL PENDUDUK
 			//jika data kurang lengkap bisa di tambahkan dari fungsi "get_data_surat" pada file ini
 			$buffer=str_replace("[alamat]","$individu[alamat_wilayah]",$buffer);
+			$buffer=str_replace("[alamat_jalan]","$individu[alamat]",$buffer);
+			$buffer=str_replace("[dusun]","$individu[dusun]",$buffer);
+			$buffer=str_replace("[rw]","$individu[rw]",$buffer);
+			$buffer=str_replace("[rt]","$individu[rt]",$buffer);
 			$buffer=str_replace("[nama_ayah]","$individu[nama_ayah]",$buffer);
 			$buffer=str_replace("[nama_ibu]","$individu[nama_ibu]",$buffer);
 			$buffer=str_replace("[kepala_kk]","$individu[kepala_kk]",$buffer);
