@@ -1,163 +1,98 @@
-<?php
-/*
- * create.php
- * 
- * Backend View untuk Nulis Program Bantuan Baru
- * 
- * Copyright 2015 Isnu Suntoro <isnusun@gmail.com>
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- * 
- * 
- */
-
-?>
-<div id="pageC">
-<table class="inner">
-	<tr style="vertical-align:top">
-		<td class="side-menu">
-		<?php
-		$this->load->view('program_bantuan/menu_kiri.php')
-		?>
-		</td>
-		<td class="contentpane">
-			<div id="contentpane">
-				<div class="ui-layout-center" id="maincontent">
-			
-					<legend>Form Penulisan Program Bantuan</legend>
-					<div style="width:96%">
-						<?php 
-						if(validation_errors()){
-							echo "
-							<div class=\"error\" style=\"border:solid 2px #c00;color:#c00;margin:1em 0;\">
-								<div style=\"background:#c00;color:#fff;padding:1em;font-weight:bolder;\">
-								Ada Kesalahan
+<?php $data = $program[0]; ?>
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>Ubah Program Bantuan <?= $data['nama']; ?></h1>
+		<ol class="breadcrumb">
+			<li><a href="<?=site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?=site_url('program_bantuan')?>"> Daftar Program Bantuan</a></li>
+			<li class="active">Ubah Program Bantuan <?= $data['nama']; ?></li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<div class="box box-info">
+			<div class="box-header with-border">
+				<a href="<?=site_url('program_bantuan')?>" class="btn btn-social btn-flat btn-info btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Kembali Ke Daftar Program Bantuan"><i class="fa fa-arrow-circle-o-left"></i> Kembali Ke Daftar Program Bantuan</a>
+			</div>
+			<form id="validasi" action="<?= $form_action?>" method="POST" enctype="multipart/form-data" class="form-horizontal">
+				<div class="box-body">
+					<?php $cid = $data["sasaran"]; ?>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Sasaran Program</label>
+						<div class="col-sm-3">
+							<?php if ($jml <> 0): ?>
+								<input type="hidden" name="cid" value="<?= $cid ?>">
+								<select class="form-control input-sm" disabled>
+							<?php else: ?>
+								<select class="form-control input-sm required" name="cid" id="cid">
+							<?php endif;?>
+								<option value="">Pilih Sasaran Program</option>
+								<option value="1" <?php selected($cid, 1); ?>>Penduduk Perorangan</option>
+								<option value="2" <?php selected($cid, 2); ?>>Keluarga - KK</option>
+								<option value="3" <?php selected($cid, 3); ?>>Rumah Tangga</option>
+								<option value="4" <?php selected($cid, 4); ?>>Kelompok / Organisasi</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-3" for="nama">Nama Program</label>
+						<div class="col-sm-8">
+							<input name="nama" class="form-control input-sm nomor_sk" maxlength="100" placeholder="Nama Program"  type="text" value="<?= $data["nama"]; ?>"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="ndesc">Keterangan</label>
+						<div class="col-sm-8">
+							<textarea id="ndesc" name="ndesc" class="form-control input-sm required" placeholder="Isi Keterangan" maxlength="500" rows="8"><?= $data["ndesc"]; ?></textarea>
+						</div>
+					</div>
+					<?php $data= $program[0]; $val = $data["asaldana"]; ?>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="asaldana">Asal Dana</label>
+						<div class="col-sm-3">
+							<select class="form-control input-sm required" name="asaldana" id="asaldana">
+								<option value="">Sumber Dana</option>
+								<?php foreach ($asaldana AS $ad): ?>
+									<option value="<?= $ad?>" <?php selected($val, $ad); ?>><?= $ad?></option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="tgl_post">Rentang Waktu Program</label>
+						<div class="col-sm-4">
+							<div class="input-group input-group-sm date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
 								</div>
-								<div style=\"padding:1em 2em;\">
-							".validation_errors()."
+								<input class="form-control input-sm pull-right" id="tgl_1" name="sdate" placeholder="Tgl. Mulai" type="text" value="<?= date("d/m/Y",strtotime($data["sdate"])); ?>">
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="input-group input-group-sm date">
+								<div class="input-group-addon">
+									<i class="fa fa-calendar"></i>
 								</div>
+								<input class="form-control input-sm pull-right" id="tgl_2" name="edate" placeholder="Tgl. Akhir" type="text" value="<?= date("d/m/Y",strtotime($data["edate"])); ?>">
 							</div>
-							";
-						}
-						
-						if($_SESSION["success"] == 1){
-							echo "Simpan Berhasil";
-						}
-						$data= $program[0];
-						$cid = $data["sasaran"];
-
-						 ?>
-						<?php echo form_open("program_bantuan/update/".$data["id"])."\n"; ?>
-							<div class="form-group">
-								<label>Sasaran Program</label>
-								<select class="form-control" name="cid" id="cid">
-									<option value="">Pilih Sasaran Program <?php echo $cid;?></option>
-									<?php
-									$strC = ($cid == 1)?"selected=\"selected\"":"";
-									echo "<option value=\"1\" ".$strC.">Penduduk Perorangan</option>";
-									$strC = ($cid == 2)?"selected=\"selected\"":"";
-									echo "<option value=\"2\" ".$strC.">Keluarga - KK</option>";
-									$strC = ($cid == 3)?"selected=\"selected\"":"";
-									echo "<option value=\"3\" ".$strC.">Rumah Tangga</option>";
-									$strC = ($cid == 4)?"selected=\"selected\"":"";
-									echo "<option value=\"4\" ".$strC.">Kelompok / Organisasi</option>";
-									?>
-								</select>
-							</div>
-							<div class="form-group">
-								<label>Nama Program</label>
-								<input type="text" class="form-control" name="nama" id="nama" placeholder="Tuliskan nama program" value="<?php echo $data["nama"]; ?>"/>
-							</div>
-							<div class="form-group">
-								<label>Keterangan</label>
-								<textarea class="form-control" name="ndesc" id="ndesc"><?php echo $data["ndesc"]; ?></textarea>
-							</div>
-							<div class="form-group">
-								<label>Rentang Waktu Program</label>
-								Mulai <input type="text" class="inputbox required" style="width:200px" name="sdate" id="sdate" placeholder="" value="<?php echo date("m/d/Y",strtotime($data["sdate"])); ?>"/>
-								s.d <input type="text" class="inputbox required" style="width:200px" name="edate" id="edate" placeholder="" value="<?php echo date("m/d/Y",strtotime($data["edate"])); ?>"/>
-							</div>
-							
-							<div class="form-group">
-								<div class="uibutton-group">
-								<input type="submit" class="uibutton confirm" name="tombol" id="tombol" value="Simpan"/>
-								<input type="reset" class="uibutton" name="tombolreset" id="tombolreset" value="Batal"/>
-								</div>
-							</div>
-						</form>
+						</div>
+					</div>
+					<?php $data= $program[0]; $status = $data["status"]; ?>
+					<div class="form-group">
+						<label class="col-sm-3 control-label" for="status">Status</label>
+						<div class="col-sm-3">
+							<select class="form-control input-sm required" name="status" id="status">
+								<option value="1" <?php selected($status, 1); ?>>Aktif</option>
+								<option value="0" <?php selected($status, 0); ?>>Tidak Aktif</option>
+								<!-- Default Value Aktif -->
+							</select>
+						</div>
 					</div>
 				</div>
+				<div class='box-footer'>
+					<button type='reset' class='btn btn-social btn-flat btn-danger btn-sm'><i class='fa fa-times'></i> Batal</button>
+					<button type='submit' class='btn btn-social btn-flat btn-info btn-sm pull-right confirm'><i class='fa fa-check'></i> Simpan</button>
+				</div>
 			</div>
-		</td>
-		<td style="width:250px;" class="contentpane">
-		<?php
-		$this->load->view('program_bantuan/panduan.php')
-		?>
-		</td>
-	</tr>
-</table>
-<script>
-$(document).ready(function () {
-    var daysToAdd = 4;
-    $("#sdate").datepicker({
-        onSelect: function (selected) {
-            var dtMax = new Date(selected);
-            dtMax.setDate(dtMax.getDate() + daysToAdd); 
-            var dd = dtMax.getDate();
-            var mm = dtMax.getMonth() + 1;
-            var y = dtMax.getFullYear();
-            var dtFormatted = mm + '/'+ dd + '/'+ y;
-            $("#edate").datepicker("option", "minDate", dtFormatted);
-        }
-    });
-    
-    $("#edate").datepicker({
-        onSelect: function (selected) {
-            var dtMax = new Date(selected);
-            dtMax.setDate(dtMax.getDate() - daysToAdd); 
-            var dd = dtMax.getDate();
-            var mm = dtMax.getMonth() + 1;
-            var y = dtMax.getFullYear();
-            var dtFormatted = mm + '/'+ dd + '/'+ y;
-            $("#sdate").datepicker("option", "maxDate", dtFormatted)
-        }
-    });
-});</script>
-
-<script type="text/javascript" src="<?php echo base_url()?>assets/tiny_mce/tiny_mce_src.js"></script>
-<script type="text/javascript">
-tinyMCE.init({
-        // General options
-		mode : "textareas",
-		theme : "advanced",
-		relative_urls: false,
-		language : "en",
-		skin : "o2k7",
-        plugins : "jbimages,lists,pagebreak,table,advlink,preview,paste,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
-
-        // Theme options
-        theme_advanced_buttons1 : "pastetext,pasteword,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,jbimages,cleanup,help,code,|,preview,|,forecolor,backcolor|,fullscreen",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_statusbar_location : "bottom",
-        theme_advanced_resizing : true,
-
-        // Skin options
-        skin : "o2k7",
-        skin_variant : "blue"
-});
-</script>
+		</div>
+	</section>
 </div>

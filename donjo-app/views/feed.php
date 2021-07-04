@@ -1,37 +1,39 @@
-<?php header("Content-Type: application/xml; charset=ISO-8859-1"); 
-$details = "<rss xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:sy=\"http://purl.org/rss/1.0/modules/syndication/\" xmlns:admin=\"http://webns.net/mvcb/\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\" version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">
-<channel>
-	<title>Desa ". $data_config["nama_desa"] ."</title>
-	<link>". base_url() ."</link>
-	<description>Situs Web Desa ". $data_config["nama_desa"] ." Kec. ". $data_config["nama_kecamatan"] ." Kab. ". $data_config["nama_kabupaten"] ." - ". $data_config["nama_propinsi"] ."</description>
-	<language>ID</language>
-	<generator>Sistem Informasi Desa v3.04</generator>
-	<pubDate>".date(DATE_RFC2822)."</pubDate>
-	<image>
-		<title>Desa ". $data_config["nama_desa"] ."</title>
-		<url>". base_url("assets/files/logo/".$data_config["logo"]."") ."</url>
-		<link>". base_url() ."</link>
-	</image>
-	<atom:link href=\"".htmlspecialchars(site_url("feed"))."\" rel=\"self\" type=\"application/rss+xml\" />
-	"; 
-foreach($feeds as $key=>$item)
-{
-	if(strlen(trim($item["judul"]))>0)
-	{
-		$kategori = (strlen(trim($item["kategori"]))==0)? "Artikel":$item["kategori"];
-		$details .= "
-		<item>
-			<title>".htmlspecialchars($item["judul"])."</title>
-			<link>".$item["url"]."</link>
-			<source url=\"".htmlspecialchars(site_url("feed"))."\">Situs Web Desa ". $data_config["nama_desa"] ."</source>
-			<pubDate>".date(DATE_RFC2822,strtotime($item["tgl"]))."</pubDate>
-			<dc:creator><![CDATA[ ".$item["author"]." ]]></dc:creator>
-			<category><![CDATA[ ".htmlspecialchars($kategori)." ]]></category>
-			<guid isPermaLink=\"false\">".htmlspecialchars($item["url"])."</guid>
-			<description><![CDATA[ ".htmlspecialchars($data_config["nama_desa"]).", ".htmlspecialchars($item["isi"])." ]]></description>
-		</item>\n";
-	}
-}
-$details .="</channel>
-</rss>";
-printf($details);
+﻿<rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/">
+	<channel>
+		<title>Desa <?= $data_config["nama_desa"]; ?></title>
+		<link><?= base_url(); ?></link>
+		<description>Situs Web <?= ucwords($this->setting->sebutan_desa . ' ' . $data_config["nama_desa"] . ' ' . $this->setting->sebutan_kecamatan_singkat . ' ' . $data_config["nama_kecamatan"] . ' ' . $this->setting->sebutan_kabupaten_singkat . ' ' . $data_config["nama_kabupaten"] . ' Prov. ' . $data_config["nama_propinsi"]); ?>.</description>
+		<dc:language>id</dc:language>
+		<dc:rights>Copyright 2016-<?= date('Y') ?> OpenDESA - OpenSID <?= $this->setting->current_version ?></dc:rights>
+		<?php foreach ($feeds as $key): ?>
+			<item>
+				<title><?= htmlspecialchars($key->judul); ?></title>
+				<link><?= site_url("artikel/".buat_slug((array) $key)); ?></link>
+				<pubdate><?= date(DATE_RSS, strtotime($key->tgl_upload)); ?></pubdate>
+				<description>
+					<![CDATA[
+						<?php if (is_file(LOKASI_FOTO_ARTIKEL."sedang_{$key->gambar}")): ?>
+							<img src="<?= base_url(LOKASI_FOTO_ARTIKEL."sedang_{$key->gambar}") ?>" />
+						<?php endif; ?>
+						<?= htmlentities(strip_tags(substr($key->isi, 0, max(strpos($key->isi, " ", 260), 200))) . '[...]'); ?>
+					]]>
+				</description>
+				<content:encoded>
+					<![CDATA[
+						<?php if (is_file(LOKASI_FOTO_ARTIKEL."sedang_{$key->gambar}")): ?>
+							<img src="<?= base_url(LOKASI_FOTO_ARTIKEL."sedang_{$key->gambar}") ?>" />
+						<?php endif; ?>
+						<?= $key->isi ?>
+					]]>
+				</content:encoded>
+				<dc:creator><?= $key->owner ?></dc:creator>
+			</item>
+		<?php endforeach; ?>
+	</channel>
+</rss>

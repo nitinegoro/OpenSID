@@ -1,215 +1,204 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-<title>Cetak Laporan Bulanan</title>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Cetak Laporan Bulanan</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="<?= base_url()?>assets/css/report.css" rel="stylesheet" type="text/css">
+    <!-- Untuk ubahan style desa -->
+    <?php if (is_file("desa/css/siteman.css")): ?>
+      <link type='text/css' href="<?= base_url()?>desa/css/siteman.css" rel='Stylesheet' />
+    <?php endif; ?>
+  </head>
+  <style type="text/css">
+    .underline { text-decoration: underline; }
+    td.judul {font-size: 14pt; font-weight: bold;}
+    td.judul2 {font-size: 12pt; font-weight: bold;}
+    td.text-bold {font-weight: bold;}
+    table.tftable td.no-border {
+      border: 0px;
+      border-style: hidden;
+    }
+    table.tftable td.no-border-kecuali-kiri {
+      border-top-style: hidden;
+      border-bottom-style: hidden;
+      border-right-style: hidden;
+    }
+    table.tftable td.no-border-kecuali-atas {
+      border-left-style: hidden;
+      border-bottom-style: hidden;
+      border-right-style: hidden;
+    }
+    table.tftable td.no-border-kecuali-bawah {
+      border-left-style: hidden;
+      border-top-style: hidden;
+      border-right-style: hidden;
+    }
+    table.tftable
+    {
+      margin-top: 5px;
+      font-size:12px;
+      color:<?= (isset($warna_font) ? $warna_font : "");?>;
+      width:100%;
+      border-width: 1px;
+      border-style: solid;
+      border-color: <?= (isset($warna_border) ? $warna_border : "");?>;
+      border-collapse: collapse;
+    }
+    table.tftable.lap-bulanan
+    {
+      border-width: 3px;
+    }
+    table.tftable tr.thick
+    {
+      border-width: 3px; border-style: solid;
+    }
+    table.tftable th.thick
+    {
+      border-width: 3px;
+    }
+    table.tftable th.thick-kiri
+    {
+      border-left: 3px solid <?= (isset($warna_border) ? $warna_border : "");?>;
+    }
+    table.tftable td.thick-kanan
+    {
+      border-right: 3px solid <?= (isset($warna_border) ? $warna_border : "");?>;
+    }
+    table.tftable td.angka
+    {
+      text-align: right;
+      }
+    table.tftable th
+    {
+      background-color:<?= (isset($warna_background) ? $warna_background : "");?>;padding: 3px;border: 1px solid <?= (isset($warna_border) ? $warna_border : "");?>;text-align:center;
+    }
+    /*table.tftable tr {background-color:#ffffff;}*/
+    table.tftable td
+    {
+      padding: 8px;border: 1px solid <?= (isset($warna_border) ? $warna_border : "");?>;
+    }
+  </style>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link href="<?php echo base_url()?>assets/css/report.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-<div id="container">
-
-<!-- Print Body -->
-<div id="body">
-
-	   <table  width="100%">
-				<tbody><tr>	<?php foreach($config as $data){?>
-				<td width="37%"><h4>PEMERINTAH KABUPATEN/KOTA  <?php echo unpenetration($data['nama_kabupaten'])?></h4></td>
-				<td align= "right" width="17%"><h4>LAMPIRAN A - 9</h4></td>		</tr>
-				<tr>
-					<td></td>
-					<td width="100%"><h3>LAPORAN BULANAN <?php echo strtoupper(config_item('sebutan_desa'))?>/KELURAHAN</h3></td>
-
-
-				</tr>
-				</tbody>
-		</table>
-		<br>
-				<table>
-				<tbody><tr>
-					<td><?php echo ucwords(config_item('sebutan_desa'))?>/Kelurahan</td>
-					<td width="3%">:</td>
-					<td width="38.5%"><?php echo unpenetration($data['nama_desa'])?></h4></td>
-					<td></td>
-
-				</tr>
-				<tr>
-					<td>Kecamatan</td>
-					<td width="3%">:</td>
-					<td width="38.5%"><?php echo unpenetration($data['nama_kecamatan'])?></td>
-					<td></td>
-					<?php  } ?>
-				</tr>
-				<tr>
-					<td>Laporan Bulan</td>
-					<td width="3%">:</td>
-					<td><?php echo $bln?> tahun <?php echo $tahun?> </td>
-					<td width="40%"></td>
-
-				</tr>
-
-		</tbody></table>
-
-		<br>
-	<table class="border thick">
-			<thead>
-				<tr class="border thick">
-					<th  width="4%"><div align="center">No.</div></th>
-					<th  width="18%"><div align="center">PERINCIAN </div></th>
-				   <th colspan="2" ><div align="center">
-      			<table  width="100%">
-          			<tbody><tr>
-            		<th colspan="2" ><div align="center">Warga Negara Indonesia </div> </th>
-          			</tr>
-          			<tr>
-            		<th width="50%"><div align="center">Laki-laki</div></th>
-            		<th width="100%"><div align="center">Perempuan</div></th>
-          			</tr>
-        			</tbody></table></div>
-        			</th>
-				   <th colspan="2" ><div align="center">
-      			<table  width="100%">
-          			<tbody><tr>
-            		<th colspan="2" ><div align="center">Orang Asing</div> </th>
-          			</tr>
-          			<tr>
-            		<th width="50%"><div align="center">Laki-laki</div></th>
-            		<th width="100%"><div align="center">Perempuan</div></th>
-          			</tr>
-        			</tbody></table></div>
-        			</th>
-				   <th colspan="3" ><div align="center">
-      			<table  width="100%">
-          			<tbody><tr>
-            		<th colspan="3" ><div align="center">Jumlah</div> </th>
-          			</tr>
-          			<tr>
-            		<th width="50"><div align="center">Laki-laki</div></th>
-            		<th width="50"><div align="center">Perempuan</div></th>
-            		<th width="50"><div align="center">L + P</div></th>
-          			</tr>
-        			</tbody></table></div>
-        			</th>
-
-
-				</tr>
-				<tr class="border thick">
-					<th><div align="center">1</div></th>
-					<th><div align="center">2</div></th>
-					<th width="13%"><div align="center">3</div></th>
-        			<th width="13%"><div align="center">4</div></th>
-			      <th width="13%"><div align="center">5</div></th>
-        			<th width="13%"><div align="center">6</div></th>
-			      <th width="50"><div align="center">7</div></th>
-        			<th width="50"><div align="center">8</div></th>
-        			<th width="50"><div align="center">9</div></th>
-
-
-				</tr>
-			</thead>
-			<tbody>
-
-
-     <tr>
-		</tr><tr>
-    	<td><div align="center">1</div></td>
-    	<td>Penduduk awal bulan ini</td>
-    	<td><?php echo $penduduk_awal['WNI_L']+0 ?></td>
-    	<td><?php echo $penduduk_awal['WNI_P']+0 ?></td>
-    	<td><?php echo $penduduk_awal['WNA_L']+0 ?></td>
-    	<td><?php echo $penduduk_awal['WNA_P']+0 ?></td>
-      <td><?php echo ($penduduk_awal['WNI_L']+$penduduk_awal['WNA_L'])?></td>
-      <td><?php echo ($penduduk_awal['WNI_P']+$penduduk_awal['WNA_P'])?></td>
-      <td><?php echo ($penduduk_awal['WNI_L']+$penduduk_awal['WNA_L'])+($penduduk_awal['WNI_P']+$penduduk_awal['WNA_P'])?></td>
-
-    	</tr>
-		<tr>
-    	<td><div align="center">2</div></td>
-    	<td>Kelahiran bulan ini</td>
-
-    	<td><?php echo $kelahiran['WNI_L']+0 ?></td>
-    	<td><?php echo $kelahiran['WNI_P']+0 ?></td>
-    	<td><?php echo $kelahiran['WNA_L']+0 ?></td>
-    	<td><?php echo $kelahiran['WNA_P']+0 ?></td>
-      <td><?php echo ($kelahiran['WNI_L']+$kelahiran['WNA_L'])?></td>
-      <td><?php echo ($kelahiran['WNI_P']+$kelahiran['WNA_P'])?></td>
-      <td><?php echo ($kelahiran['WNI_L']+$kelahiran['WNA_L'])+($kelahiran['WNI_P']+$kelahiran['WNA_P'])?></td>
-
-    	</tr>
-		<tr>
-    	<td><div align="center">3</div></td>
-    	<td>Kematian bulan ini</td>
-
-    	<td><?php echo $kematian['WNI_L']+0 ?></td>
-    	<td><?php echo $kematian['WNI_P']+0 ?></td>
-    	<td><?php echo $kematian['WNA_L']+0 ?></td>
-    	<td><?php echo $kematian['WNA_P']+0 ?></td>
-      <td><?php echo ($kematian['WNI_L']+$kematian['WNA_L'])?></td>
-      <td><?php echo ($kematian['WNI_P']+$kematian['WNA_P'])?></td>
-      <td><?php echo ($kematian['WNI_L']+$kematian['WNA_L'])+($kematian['WNI_P']+$kematian['WNA_P'])?></td>
-
-    	</tr>
-		<tr>
-    	<td><div align="center">4</div></td>
-    	<td>Pendatang bulan ini</td>
-
-    	<td><?php echo $pendatang['WNI_L']+0 ?></td>
-    	<td><?php echo $pendatang['WNI_P']+0 ?></td>
-    	<td><?php echo $pendatang['WNA_L']+0 ?></td>
-    	<td><?php echo $pendatang['WNA_P']+0 ?></td>
-      <td><?php echo ($pendatang['WNI_L']+$pendatang['WNA_L'])?></td>
-      <td><?php echo ($pendatang['WNI_P']+$pendatang['WNA_P'])?></td>
-      <td><?php echo ($pendatang['WNI_L']+$pendatang['WNA_L'])+($pendatang['WNI_P']+$pendatang['WNA_P'])?></td>
-
-    	</tr>
-		<tr>
-    	<td><div align="center">5</div></td>
-    	<td>Pindah bulan ini</td>
-
-    	<td><?php echo $pindah['WNI_L']+0 ?></td>
-    	<td><?php echo $pindah['WNI_P']+0 ?></td>
-    	<td><?php echo $pindah['WNA_L']+0 ?></td>
-    	<td><?php echo $pindah['WNA_P']+0 ?></td>
-      <td><?php echo ($pindah['WNI_L']+$pindah['WNA_L'])?></td>
-      <td><?php echo ($pindah['WNI_P']+$pindah['WNA_P'])?></td>
-      <td><?php echo ($pindah['WNI_L']+$pindah['WNA_L'])+($pindah['WNI_P']+$pindah['WNA_P'])?></td>
-
-    	</tr>
-
-		<tr>
-    	<td><div align="center">6</div></td>
-    	<td>Penduduk akhir bulan ini</td>
-
-    	<td><?php echo $penduduk_akhir['WNI_L']+0 ?></td>
-    	<td><?php echo $penduduk_akhir['WNI_P']+0 ?></td>
-    	<td><?php echo $penduduk_akhir['WNA_L']+0 ?></td>
-    	<td><?php echo $penduduk_akhir['WNA_P']+0 ?></td>
-      <td><?php echo ($penduduk_akhir['WNI_L']+$penduduk_akhir['WNA_L'])?></td>
-      <td><?php echo ($penduduk_akhir['WNI_P']+$penduduk_akhir['WNA_P'])?></td>
-      <td><?php echo ($penduduk_akhir['WNI_L']+$penduduk_akhir['WNA_L'])+($penduduk_akhir['WNI_P']+$penduduk_akhir['WNA_P'])?></td>
-
-    	</tr>
-
-    <tr>
-    	<td><div align="center">7</div></td>
-    	<td>Penduduk hilang bulan ini</td>
-
-    	<td><?php echo $hilang['WNI_L']+0 ?></td>
-    	<td><?php echo $hilang['WNI_P']+0 ?></td>
-    	<td><?php echo $hilang['WNA_L']+0 ?></td>
-    	<td><?php echo $hilang['WNA_P']+0 ?></td>
-      <td><?php echo ($hilang['WNI_L']+$hilang['WNA_L'])?></td>
-      <td><?php echo ($hilang['WNI_P']+$hilang['WNA_P'])?></td>
-      <td><?php echo ($hilang['WNI_L']+$hilang['WNA_L'])+($hilang['WNI_P']+$hilang['WNA_P'])?></td>
-
-    	</tr>
-
-  </tbody>
-</table>
-<p>&nbsp;</p>
-<p>&nbsp;</p>
-
-</div>
-   <label>Tanggal cetak : &nbsp; </label><?php echo tgl_indo(date("Y m d"))?>
-</div>
-
-</body></html>
+  <body>
+    <div id="container">
+      <!-- Print Body -->
+      <div id="body">
+        <table>
+          <tr>
+            <td colspan="11" class='text-bold'>PEMERINTAH KABUPATEN/KOTA</td>
+            <td colspan="2" class="text-bold"><span style="float: right; border: solid 1px black; font-size: 12pt; text-align: center; padding: 5px 20px;">LAMPIRAN A-9</span></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text"><span style="border-bottom: 2px solid;"><?= strtoupper($config['nama_kabupaten'])?></span></td>
+            <td colspan="11">&nbsp;</td>
+          </tr>
+          <tr>
+            <td colspan="3">&nbsp;</td>
+            <td colspan="10" class="judul" style="padding-bottom: 10px;"><span style="border-bottom: 2px solid;">LAPORAN BULANAN DESA/KELURAHAN</span></td>
+          <tr>
+            <tr>
+              <td colspan="3" width="32%">&nbsp;</td>
+              <td colspan="3" width="15%" class="text-bold">Desa/Kelurahan</td>
+              <td colspan="7" width="53%">: <?= strtoupper($config['nama_desa'])?></td>
+            </tr>
+            <tr>
+              <td colspan="3">&nbsp;</td>
+              <td colspan="3" class="text-bold">Kecamatan</td>
+              <td colspan="7">: <?= strtoupper($config['nama_kecamatan'])?></td>
+            </tr>
+          <tr>
+            <td colspan="3">&nbsp;</td>
+            <td colspan="3" class="text-bold">Laporan Bulan</td>
+            <td colspan="7">: <?= $bln?> <?= $tahun?></td>
+          </tr>
+        </table>
+        <br>
+        <?php include ("donjo-app/views/laporan/tabel_bulanan.php"); ?>
+        <table class="tftable">
+          <tr><td colspan="13" class="no-border">&nbsp;</td></tr>
+          <tr>
+            <td colspan="8" class="judul2 no-border-kecuali-bawah" style="padding-bottom: 10px;">
+              <span style="border-bottom: 2px solid;">PERINCIAN PINDAH</span>
+            </td>
+            <td colspan="5" class="no-border">&nbsp;</td>
+          </tr>
+          <tr>
+            <th rowspan="2" width='2%' class="text-center">NO</th>
+            <th rowspan="2" width='20%' class="text-center">KETERANGAN</th>
+            <th colspan="3" class="text-center">PENDUDUK</th>
+            <th colspan="3" class="text-center">KELUARGA (KK)</th>
+            <td rowspan="7" colspan="2" width="30%" class="no-border-kecuali-kiri">&nbsp;</td>
+            <td rowspan="2" colspan="3" class="no-border" style="vertical-align: top;">
+              <?= ucwords($this->setting->sebutan_desa)?> <?= $config['nama_desa']?>, <?= tgl_indo(date("Y m d"))?><br>
+              <?= str_ireplace($this->setting->sebutan_desa, '', $pamong_ttd['jabatan']).' '.ucwords($this->setting->sebutan_desa).' '.$config['nama_desa']?>
+            </td>
+          </tr>
+          <tr>
+            <th class="text-center">L</th>
+            <th class="text-center">P</th>
+            <th class="text-center">L+P</th>
+            <th class="text-center">L</th>
+            <th class="text-center">P</th>
+            <th class="text-center">L+P</th>
+          </tr>
+          <tr>
+            <td class="no_urut">1</td>
+            <td>Pindah keluar Desa/Kelurahan</td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['DESA_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['DESA_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['DESA_L']+$rincian_pindah['DESA_P']),'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['DESA_KK_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['DESA_KK_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['DESA_KK_L']+$rincian_pindah['DESA_KK_P']),'-')?></td>
+            <td colspan="3" class="no-border">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="no_urut">2</td>
+            <td>Pindah keluar Kecamatan</td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KEC_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KEC_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['KEC_L']+$rincian_pindah['KEC_P']),'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KEC_KK_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KEC_KK_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['KEC_KK_L']+$rincian_pindah['KEC_KK_P']),'-')?></td>
+            <td colspan="3" class="no-border">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="no_urut">3</td>
+            <td>Pindah keluar Kabupaten/Kota</td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KAB_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KAB_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['KAB_L']+$rincian_pindah['KAB_P']),'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KAB_KK_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['KAB_KK_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['KAB_KK_L']+$rincian_pindah['KAB_KK_P']),'-')?></td>
+            <td colspan="3" class="no-border">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="no_urut">4</td>
+            <td>Pindah keluar Provinsi</td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['PROV_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['PROV_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['PROV_L']+$rincian_pindah['PROV_P']),'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['PROV_KK_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['PROV_KK_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['PROV_KK_L']+$rincian_pindah['PROV_KK_P']),'-')?></td>
+            <td rowspan="2" colspan="3" class="no-border" style="vertical-align: top;">
+              ( <?= $pamong_ttd['pamong_nama']?> )<br>
+              NIP/<?= $this->setting->sebutan_nip_desa  ?> <?= $pamong_ttd['pamong_niap_nip']?>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2" class="text-center text-bold">JUMLAH:</td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['TOTAL_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['TOTAL_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['TOTAL_L']+$rincian_pindah['TOTAL_P']),'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['TOTAL_KK_L'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as($rincian_pindah['TOTAL_KK_P'],'-')?></td>
+            <td class="bilangan"><?= show_zero_as(($rincian_pindah['TOTAL_KK_L']+$rincian_pindah['TOTAL_KK_P']),'-')?></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

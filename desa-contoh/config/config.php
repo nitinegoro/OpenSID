@@ -4,15 +4,19 @@
 // SID. Letakkan setting konfigurasi ini di desa/config/config.php.
 // ----------------------------------------------------------------------------
 
-// key dari layanan google map
-$config['google_key'] = 'ganti-dengan-google-api-key';
-$config['libreoffice_path'] = "C:\Program Files (x86)\LibreOffice 4\program";
+/*
+	Uncomment jika situs ini untuk demo. Pada demo, user admin tidak bisa dihapus
+	dan username/password tidak bisa diubah
+*/
+// $config['demo_mode'] = 'y';
 
-// penyesuaian judul yang muncul di browser
-$config['website_title'] = 'Website Resmi Desa Kami';
-$config['login_title'] = 'OpenSID';
-$config['admin_title'] = 'Sistem Informasi Desa';
+// Setting ini untuk menentukan user yang dipercaya. User dengan id di setting ini
+// dapat membuat artikel berisi video yang aktif ditampilkan di Web.
+// Misalnya, ganti dengan id = 1 jika ingin membuat pengguna admin sebagai pengguna terpecaya.
+	$config['user_admin'] = 0;
 
-// untuk mengganti penamaan wilayah 'desa'
-$config['sebutan_desa'] = 'nagari';
-$config['sebutan_dusun'] = 'jorong';
+/*
+	Token untuk mengakses TrackSID mengambil data wilayah
+*/
+	$config['token_tracksid'] = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6bnVsbCwidGltZXN0YW1wIjoxNjAzNDY2MjM5fQ.HVCNnMLokF2tgHwjQhSIYo6-2GNXB4-Kf28FSIeXnZw";
+

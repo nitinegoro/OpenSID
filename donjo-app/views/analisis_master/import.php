@@ -1,41 +1,45 @@
-<div id="pageC">
-<table class="inner">
-<tr style="vertical-align:top">
-<td style="background:#fff;padding:0px;"> 
+<script>
+	$('#file_browser2').click(function(e)
+	{
+			e.preventDefault();
+			$('#file2').click();
+	});
 
-<div class="content-header">
+	$('#file2').change(function()
+	{
+			$('#file_path2').val($(this).val());
+	});
 
-</div>
-<div id="contentpane">
-<div class="ui-layout-north panel"><h3>Form Master Analisis</h3>
-</div>
-<form id="validasi" action="<?php echo $form_action?>" method="POST" enctype="multipart/form-data">
-<div class="ui-layout-center" id="maincontent" style="padding: 5px;">
-<table class="form">
-<tr>
-<th>Form Master Analisis</th>
-<td>
-<li>Data yang dibutuhkan untuk Import dengan memenuhi aturan data<a href="<?php echo base_url()?>assets/import/analisis.xls"> sebagai berikut</a><br>
-<li>Contoh urutan format dapat dilihat pada <a href="<?php echo base_url()?>assets/import/ppls2.xls">tautan berikut</a><br></td>
-</tr>
-<tr>
-<th>File Master Analisis</th>
-<td><input name="userfile" type="file" /></td>
-</tr>
-</table>
-</div>
-   
-<div class="ui-layout-south panel bottom">
-<div class="left"> 
-<a href="<?php echo site_url()?>analisis_master" class="uibutton icon prev">Kembali</a>
-</div>
-<div class="right">
-<div class="uibutton-group">
-<button class="uibutton" type="reset">Clear</button>
-<button class="uibutton confirm" type="submit" >Simpan</button>
-</div>
-</div>
-</div> </form>
-</div>
-</td></tr></table>
-</div>
+	$('#file_path2').click(function()
+	{
+			$('#file_browser2').click();
+	});
+</script>
+<form id="validasi" action="<?= $form_action ?>" method="POST" enctype="multipart/form-data">
+	<div class='modal-body'>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="box box-danger">
+					<div class="box-body">
+						<div class="form-group">
+							<label for="file"  class="control-label">File Master Analisis :</label>
+							<div class="input-group input-group-sm">
+								<input type="text" class="form-control" id="file_path2" name="userfile">
+								<input type="file" class="hidden" id="file2" name="userfile">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-info btn-flat"  id="file_browser2"><i class="fa fa-search"></i> Browse</button>
+								</span>
+							</div>
+							<p class="help-block small">1. Data yang dibutuhkan untuk Impor dengan memenuhi aturan data sebagai berikut <a href="<?= base_url() ?>assets/import/analisis.xls">Aturan Data</a></p>
+							<p class="help-block small">2. Contoh format upload Sensus dapat dilihat pada tautan berikut <a href="<?= base_url() ?>assets/import/ppls2.xls">Contoh</a></p>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="reset" class="btn btn-social btn-flat btn-danger btn-sm" data-dismiss="modal"><i class='fa fa-sign-out'></i> Tutup</button>
+						<button type="submit" class="btn btn-social btn-flat btn-info btn-sm" id="ok"><i class='fa fa-check'></i> Simpan</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

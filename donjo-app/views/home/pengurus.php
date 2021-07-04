@@ -1,81 +1,177 @@
 <script>
 	$(function() {
-		var keyword = <?php echo $keyword?> ;
+		var keyword = <?= $keyword?> ;
 		$( "#cari" ).autocomplete({
-			source: keyword
+			source: keyword,
+			maxShowItems: 10,
 		});
 	});
 </script>
-<div id="pageC">
-<!-- Start of Space Admin -->
-	<table class="inner">
-	<tr style="vertical-align:top">
-<td style="background:#fff;padding:0px;">
-<div class="content-header">
+<style type="text/css">
+	.table-responsive {
+		min-height: 350px;
+	}
 
+	td.nowrap {
+		white-space: nowrap;
+	}
+</style>
+<div class="box box-info">
+	<div class="box-header with-border">
+		<a href="<?= site_url('pengurus/form')?>" class="btn btn-social btn-flat btn-success btn-sm btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Tambah Staf">
+			<i class="fa fa-plus"></i>Tambah Aparat Pemerintahan <?= ucwords($this->setting->sebutan_desa)?>
+		</a>
+		<div class="btn-group btn-group-vertical">
+			<a class="btn btn-social btn-flat btn-info btn-sm" data-toggle="dropdown"><i class='fa fa-arrow-circle-down'></i> Aksi Data Terpilih</a>
+			<ul class="dropdown-menu" role="menu">
+				<li>
+					<a href="<?= site_url("pengurus/atur_bagan")?>" title="Ubah Data" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Atur Struktur Bagan" class="btn btn-social btn-flat btn-block btn-sm aksi-terpilih" ><i class="fa fa-sitemap"></i> Atur Struktur Bagan</a>
+				</li>
+				<?php if ($this->CI->cek_hak_akses('h')): ?>
+					<li>
+						<a href="#confirm-delete" class="btn btn-social btn-flat btn-block btn-sm hapus-terpilih" title="Hapus Data" onclick="deleteAllBox('mainform', '<?=site_url("pengurus/delete_all")?>')"><i class="fa fa-trash-o"></i> Hapus Data Terpilih</a>
+					</li>
+				<?php endif; ?>
+			</ul>
+		</div>
+		<a href="<?= site_url("pengurus/dialog/cetak")?>" class="btn btn-social btn-flat bg-purple btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Cetak Data" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Cetak Data"><i class="fa fa-print "></i> Cetak</a>
+		<a href="<?= site_url("pengurus/dialog/unduh")?>" title="Unduh Data" class="btn btn-social btn-flat bg-navy btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Unduh Data"><i class="fa fa-download"></i> Unduh</a>
+		<div class="btn-group btn-group-vertical">
+			<a class="btn btn-social btn-flat bg-olive btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" data-toggle="dropdown"><i class='fa fa-arrow-circle-down'></i> Bagan Organisasi</a>
+			<ul class="dropdown-menu" role="menu">
+				<li>
+					<a href="<?= site_url("pengurus/bagan")?>" title="Bagan Tanpa BPD" class="btn btn-social btn-flat btn-block btn-sm" ><i class="fa fa-sitemap"></i> Bagan Tanpa BPD</a>
+				</li>
+				<li>
+					<a href="<?= site_url("pengurus/bagan/bpd")?>" title="Bagan Dengan BPD" class="btn btn-social btn-flat btn-block btn-sm" ><i class="fa fa-sitemap"></i> Bagan Dengan BPD</a>
+				</li>
+				<li>
+					<a href="<?= site_url("pengurus/atur_bagan_layout")?>" title="Atur Ukuran Bagan" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Atur Ukuran Bagan" class="btn btn-social btn-flat btn-block btn-sm" ><i class="fa fa-cogs"></i> Atur Ukuran Bagan</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="box-body">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+					<form id="mainform" name="mainform" action="" method="post">
+						<div class="row">
+							<div class="col-sm-6">
+								<select class="form-control input-sm" name="status" onchange="formAction('mainform','<?= site_url('pengurus/filter/status')?>')">
+									<option value="">Semua</option>
+									<option value="1" <?php selected($status, 1); ?>>Aktif</option>
+									<option value="2" <?php selected($status, 2); ?>>Tidak Aktif</option>
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<div class="box-tools">
+									<div class="input-group input-group-sm pull-right">
+										<input name="cari" id="cari" class="form-control" placeholder="Cari..." type="text" value="<?=html_escape($cari)?>" onkeypress="if (event.keyCode == 13) {$('#'+'mainform').attr('action','<?= site_url('pengurus/filter/cari')?>');$('#'+'mainform').submit();}">
+										<div class="input-group-btn">
+											<button type="submit" class="btn btn-default" onclick="$('#'+'mainform').attr('action','<?= site_url("pengurus/filter/cari")?>');$('#'+'mainform').submit();"><i class="fa fa-search"></i></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="table-responsive">
+									<table class="table table-bordered table-striped dataTable table-hover">
+										<thead class="bg-gray color-palette">
+											<tr>
+												<th class="padat"><input type="checkbox" id="checkall" ></th>
+												<th class="padat">No</th>
+												<th class="padat">Aksi</th>
+												<th class="text-center">Foto</th>
+												<th>Nama, NIP/<?= $this->setting->sebutan_nip_desa  ?>, NIK</th>
+												<th nowrap>Tempat, <p>Tanggal Lahir</p></th>
+												<th>Jenis Kelamin</th>
+												<th>Agama</th>
+												<th>Pangkat / Golongan</th>
+												<th>Jabatan</th>
+												<th>Pendidikan Terakhir</th>
+												<th>Nomor SK Pengangkatan</th>
+												<th>Tanggal SK Pengangkatan</th>
+												<th>Nomor SK Pemberhentian</th>
+												<th>Tanggal SK Pemberhentian</th>
+												<th>Masa/Periode Jabatan</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php foreach ($main as $key => $data): ?>
+												<tr>
+													<td class="text-center">
+														<input type="checkbox" name="id_cb[]" value="<?=$data['pamong_id']?>" />
+													</td>
+													<td class="text-center"><?=$data['no']?></td>
+													<td nowrap>
+														<a href="<?=site_url("pengurus/urut/$paging->page/$data[pamong_id]/1")?>" class="btn bg-olive btn-flat btn-sm <?php ($data['no'] == $paging->num_rows) and print('disabled'); ?>" title="Pindah Posisi Ke Bawah"><i class="fa fa-arrow-down"></i></a>
+														<a href="<?=site_url("pengurus/urut/$paging->page/$data[pamong_id]/2")?>" class="btn bg-olive btn-flat btn-sm <?php ($data['no'] == 1 AND $paging->page == $paging->start_link) and print('disabled'); ?>" title="Pindah Posisi Ke Atas"><i class="fa fa-arrow-up"></i></a>
+														<a href="<?= site_url("pengurus/form/$data[pamong_id]")?>" class="btn bg-orange btn-flat btn-sm" title="Ubah Data"><i class="fa fa-edit"></i></a>
+														<a href="#" data-href="<?= site_url("pengurus/delete/$data[pamong_id]")?>" class="btn bg-maroon btn-flat btn-sm" title="Hapus" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a>
+														<?php if ($data['pamong_status'] == '1'): ?>
+															<a href="<?= site_url("pengurus/lock/$data[pamong_id]/2")?>" class="btn bg-navy btn-flat btn-sm"  title="Non Aktifkan"><i class="fa fa-unlock"></i></a>
+														<?php else: ?>
+															<a href="<?= site_url("pengurus/lock/$data[pamong_id]/1")?>" class="btn bg-navy btn-flat btn-sm"  title="Aktifkan"><i class="fa fa-lock"></i></a>
+														<?php endif ?>
+														<?php if ($data['pamong_ttd'] == '1'): ?>
+															<a href="<?= site_url("pengurus/ttd/$data[pamong_id]/2")?>" class="btn bg-navy btn-flat btn-sm" title="Bukan TTD a.n">a.n</a>
+														<?php else: ?>
+															<a href="<?= site_url("pengurus/ttd/$data[pamong_id]/1")?>" class="btn bg-purple btn-flat btn-sm" title="Jadikan TTD a.n">a.n</a>
+														<?php endif ?>
+														<?php if ($data['pamong_ub'] == '1'): ?>
+															<a href="<?= site_url("pengurus/ub/$data[pamong_id]/2")?>" class="btn bg-navy btn-flat btn-sm" title="Bukan TTD u.b">u.b</a>
+														<?php else: ?>
+															<a href="<?= site_url("pengurus/ub/$data[pamong_id]/1")?>" class="btn bg-purple btn-flat btn-sm" title="Jadikan TTD u.b">u.b</a>
+														<?php endif ?>
+													</td>
+													<td class="text-center">
+														<div class="user-panel">
+															<div class="image2">
+																<?php if ($data['foto']): ?>
+																	<img src="<?=AmbilFoto($data['foto'])?>" class="img-circle" alt="User Image"/>
+																<?php else: ?>
+																	<img src="<?= base_url()?>assets/files/user_pict/kuser.png" class="img-circle" alt="User Image"/>
+																<?php endif ?>
+															</div>
+														</div>
+													</td>
+													<td nowrap>
+														<?= $data['nama']?>
+														<p class='text-blue'>
+															<?php if (!empty($data['pamong_nip']) and $data['pamong_nip'] != '-'): ?>
+																<i>NIP :<?=$data['pamong_nip']?></i></br>
+															<?php else: ?>
+																<i><?= $this->setting->sebutan_nip_desa  ?> :<?=$data['pamong_niap']?></i></br>
+															<?php endif; ?>
+															<i>NIK :<?=$data['nik']?></i>
+														</p>
+													</td>
+													<td nowrap><?= $data['tempatlahir'].', <p>'.tgl_indo_out($data['tanggallahir'])?></p></td>
+													<td><?= $data['sex']?></td>
+													<td><?= $data['agama']?></td>
+													<td><?= $data['pamong_pangkat']?></td>
+													<td><?= $data['jabatan']?></td>
+													<td><?= $data['pendidikan_kk']?></td>
+													<td><?= $data['pamong_nosk']?></td>
+													<td><?= tgl_indo_out($data['pamong_tglsk'])?></td>
+													<td><?= $data['pamong_nohenti']?></td>
+													<td><?= tgl_indo_out($data['pamong_tglhenti'])?></td>
+													<td><?= $data['pamong_masajab']?></td>
+												</tr>
+											<?php endforeach; ?>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</form>
+					<?php $this->load->view('global/paging');?>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<div id="contentpane">
-	<form id="mainform" name="mainform" action="" method="post">
-    <div class="ui-layout-north panel">
-        <div class="left"><h3>Pemerintah <?php echo ucwords(config_item('sebutan_desa'))?></h3>
-            <div class="uibutton-group">
-                <a href="<?php echo site_url('pengurus/form')?>" class="uibutton tipsy south" title="Tambah Data" ><span class="icon-plus-sign icon-large">&nbsp;</span>Tambah Staf Pemerintah <?php echo ucwords(config_item('sebutan_desa'))?></a>
-                <button type="button" title="Hapus Data" onclick="deleteAllBox('mainform','<?php echo site_url("pengurus/delete_all")?>')" class="uibutton tipsy south"><span class="icon-trash icon-large">&nbsp;</span>Hapus Data
-            </div>
-        </div>
-    </div>
-    <div class="ui-layout-center" id="maincontent" style="padding: 5px;">
-        <div class="table-panel top">
-            <div class="left">
-                <select name="filter" onchange="formAction('mainform','<?php echo site_url('pengurus/filter')?>')">
-                    <option value="">Semua</option>
-                    <option value="1" <?php if($filter==1 ) :?>selected<?php endif?>>Aktif</option>
-                    <option value="2" <?php if($filter==2 ) :?>selected<?php endif?>>Non Aktif</option>
-                </select>
-            </div>
-            <div class="right">
-                <input name="cari" id="cari" type="text" class="inputbox help tipped" size="20" value="<?php echo $cari?>" title="Cari.." onkeypress="if (event.keyCode == 13) {$('#'+'mainform').attr('action','<?php echo site_url('pengurus/search')?>');$('#'+'mainform').submit();}" />
-                <button type="button" onclick="$('#'+'mainform').attr('action','<?php echo site_url('pengurus/search')?>');$('#'+'mainform').submit();" class="uibutton tipsy south"  title="Cari Data"><span class="icon-search icon-large">&nbsp;</span>Cari</button>
-            </div>
-        </div>
-        <table class="list">
-		<thead>
-            <tr>
-                <th width="5">No</th>
-                <th width="10"><input type="checkbox" class="checkall"/></th>
-                <th width="100">Aksi</th>
-				<th align="left" width="350">Nama</th>
-				<th align="left" width="150">N.I.P</th>
-				<th align="left" width="120">Jabatan</th>
-				<th>&nbsp;</th>
-			</tr>
-		</thead>
-		<tbody>
-        <?php  foreach($main as $data){ ?>
-		<tr>
-          <td align="center" width="2"><?php echo $data['no']?></td>
-			<td align="center" width="5">
-				<input type="checkbox" name="id_cb[]" value="<?php echo $data['pamong_id']?>" />
-			</td>
-          <td width="5"><div class="uibutton-group">
-            <?php if($data['pamong_id']!="707"){?><a href="<?php echo site_url("pengurus/form/$data[pamong_id]")?>" class="uibutton tipsy south" title="Ubah Data"><span  class="icon-edit icon-large"> Ubah </span></a><a href="<?php echo site_url("pengurus/delete/$data[pamong_id]")?>" class="uibutton tipsy south" title="Hapus Data" target="confirm" message="Apakah Anda Yakin?" header="Hapus Data"><span class="icon-trash icon-large"></span></a><?php }?></div>
-          </td>
-          <td><?php echo unpenetration($data['pamong_nama'])?></td>
-			<td><?php echo $data['pamong_nip']?></td>
-          <td><?php echo unpenetration($data['jabatan'])?></td>
-				<td>&nbsp;</td>
-		  </tr>
-        <?php }?>
-		</tbody>
-        </table>
-    </div>
-	</form>
-    <div class="ui-layout-south panel bottom">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
-</div>
-</td></tr></table>
-</div>
+<?php $this->load->view('global/confirm_delete');?>

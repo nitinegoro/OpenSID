@@ -1,145 +1,138 @@
-<?php
-/*
- * program.php
- * 
- * Backend View untuk Program Bantuan
- * 
- * Copyright 2015 Isnu Suntoro <isnusun@gmail.com>
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- * 
- * 
- */
+<div class="content-wrapper">
+	<?php $detail = $program[0];?>
+	<section class="content-header">
+		<h1>Peserta Program Bantuan</h1>
+		<ol class="breadcrumb">
+			<li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('program_bantuan')?>"> Daftar Program Bantuan</a></li>
+			<li><a href="<?= site_url("program_bantuan/detail/$detail[id]")?>"> Rincian Program Bantuan</a></li>
+			<li class="active">Peserta Program Bantuan</li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<a href="<?= site_url('program_bantuan')?>" class="btn btn-social btn-flat btn-primary btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Kembali Ke Daftar Program Bantuan"><i class="fa fa-arrow-circle-o-left"></i> Kembali Ke Daftar Program Bantuan</a>
+						<a href="<?= site_url("program_bantuan/detail/$detail[id]")?>" class="btn btn-social btn-flat btn-info btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Kembali Ke Rincian Program Bantuan"><i class="fa fa-arrow-circle-o-left"></i> Kembali Ke Rincian Program Bantuan</a>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<?php include('donjo-app/views/program_bantuan/rincian.php'); ?>
 
-?>
-<div id="pageC">
-<table class="inner">
-	<tr style="vertical-align:top">
-		<td class="side-menu">
-		<?php
-		$this->load->view('program_bantuan/menu_kiri.php')
-		?>
-		</td>
-		<td class="contentpane">
-			<legend>Form Penulisan Program Bantuan</legend>
-			<div class="contentpane">
-				<?php echo validation_errors(); ?>
-				<?php echo form_open('program_bantuan/form') ?>
-					<div class="form-group">
-						<label>Sasaran Program</label>
-						<select class="form-control" name="cid" id="cid">
-							<option value="">Pilih Sasaran Program</option>
-							<option value="0">Penduduk Perorangan</option>
-							<option value="1">Keluarga - KK</option>
-							<option value="2">Rumah Tangga</option>
-							<option value="3">Kelompok</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>Nama Program</label>
-						<input type="text" class="form-control" name="nama" id="nama" placeholder="Tuliskan nama program"/>
-					</div>
-					<div class="form-group">
-						<label>Keterangan</label>
-						<textarea class="form-control" name="nama" id="nama" placeholder="Tuliskan nama program">
-						</textarea>
-					</div>
-					<div class="form-group">
-						<label>Rentang Waktu Program</label>
-						Mulai <input type="text" class="inputbox required" style="width:200px" name="sdate" id="sdate" placeholder="" value=""/>
-						s.d <input type="text" class="inputbox required" style="width:200px" name="edate" id="edate" placeholder="" value=""/>
-					</div>
-					
-					<div class="form-group">
-						<div class="uibutton-group">
-						<input type="submit" class="uibutton confirm" name="tombol" id="tombol" value="Simpan"/>
-						<input type="reset" class="uibutton" name="tombolreset" id="tombolreset" value="Batal"/>
+								<h5><b>Tambah Peserta Program</b></h5>
+								<hr>
+								<form action="" id="main" name="main" method="POST" class="form-horizontal">
+									<div class="form-group" >
+										<label class="col-sm-4 col-lg-3 control-label <?php ($detail['sasaran'] != 1) and print('no-padding-top') ?>" for="nik">Cari <?= $detail['judul_cari_peserta']?></label>
+										<div class="col-sm-9">
+											<select class="form-control select2 input-sm required" id="nik" name="nik" onchange="formAction('main')" style="width:100%">
+												<option value="">-- Silakan Masukan <?= $detail['judul_cari_peserta']?> --</option>
+												<?php foreach ($program[2]as $item):
+													if (strlen($item["id"])>0): ?>
+														<option value="<?= $item['id']?>" <?= selected($individu['nik'], $item['nik']); ?>><?= $item['nama']." - ".$item['info']?></option>
+													<?php endif;
+												endforeach;?>
+											</select>
+										</div>
+									</div>
+									<hr>
+									<?php if ($individu['nik']): ?>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="box box-info box-solid">
+													<div class="box-header with-border">
+														<i class="fa fa-user"></i>
+														<h3 class="box-title">Konfirmasi Peserta</h3>
+													</div>
+													<div class="box-body">
+														<?php include('donjo-app/views/program_bantuan/konfirmasi_peserta.php'); ?>
+													</div>
+												</div>
+											</div>
+										</form>
+										<div class="col-sm-6">
+											<div class="box box-success box-solid">
+												<div class="box-header with-border">
+													<i class="fa fa-credit-card"></i>
+													<h3 class="box-title">Identitas Pada Kartu Peserta</h3>
+												</div>
+												<form id="validasi" action="<?= $form_action?>" method="POST" enctype="multipart/form-data" class="form-horizontal">
+													<div class="box-body">
+														<input name="peserta" type="hidden" value="<?= $individu['id_peserta']?>">
+														<input name="kartu_id_pend" type="hidden" value="<?= $individu['id']?>">
+														<div class="form-group">
+															<label for="no_id_kartu" class="col-sm-4 col-lg-4 control-label">Nomor Kartu Peserta</label>
+															<div class="col-sm-8">
+																<input id="no_id_kartu" class="form-control input-sm nama_terbatas required" type="text" placeholder="Nomor Kartu Peserta" name="no_id_kartu" maxlength="30">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="jenis_keramaian" class="col-sm-4 col-lg-4 control-label">Gambar Kartu Peserta</label>
+															<div class="col-sm-8">
+																<div class="input-group input-group-sm ">
+																	<input type="text" class="form-control" id="file_path">
+																	<input type="file" class="hidden" id="file" name="satuan">
+																	<span class="input-group-btn">
+																		<button type="button" class="btn btn-info btn-flat" id="file_browser"><i class="fa fa-search"></i> Browse</button>
+																	</span>
+																</div>
+																<span class="help-block"><code> Kosongkan jika tidak ingin mengunggah gambar</code></span>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="kartu_nik" class="col-sm-4 col-lg-4 control-label">NIK</label>
+															<div class="col-sm-8">
+																<input id="kartu_nik" class="form-control input-sm required nik" type="text" placeholder="Nomor NIK Peserta" name="kartu_nik" value="<?= $individu['kartu_nik']?>">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="kartu_nama" class="col-sm-4 col-lg-4 control-label">Nama</label>
+															<div class="col-sm-8">
+																<input id="kartu_nama" class="form-control input-sm required nama" type="text" maxlength="100" placeholder="Nama Peserta" name="kartu_nama" value="<?= $individu['nama']?>">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="kartu_tempat_lahir" class="col-sm-4 col-lg-4 control-label">Tempat Lahir</label>
+															<div class="col-sm-8">
+																<input id="kartu_tempat_lahir" class="form-control input-sm alamat required" type="text" placeholder="Tempat Lahir" name="kartu_tempat_lahir" maxlength="100" value="<?= $individu['tempatlahir']?>">
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="kartu_tanggal_lahir" class="col-sm-4 col-lg-4 control-label">Tanggal Lahir</label>
+															<div class="col-sm-8">
+																<div class="input-group input-group-sm date">
+																	<div class="input-group-addon">
+																		<i class="fa fa-calendar"></i>
+																	</div>
+																	<input class="form-control input-sm pull-right required" id="tgl_1" name="kartu_tanggal_lahir" placeholder="Tgl. Lahir" type="text" value="<?= tgl_indo_out($individu['tanggallahir'])?>">
+																</div>
+															</div>
+														</div>
+														<div class="form-group">
+															<label for="kartu_alamat" class="col-sm-4 col-lg-4 control-label">Alamat</label>
+															<div class="col-sm-8">
+																<input id="kartu_alamat" class="form-control input-sm alamat required" type="text" placeholder="Alamat" name="kartu_alamat" maxlength="200" value="<?= $individu['alamat_wilayah']?>">
+															</div>
+														</div>
+													</div>
+													<div class="box-footer">
+														<button type="reset" class="btn btn-social btn-flat btn-danger btn-sm"><i class="fa fa-times"></i> Batal</button>
+														<button type="submit" class="btn btn-social btn-flat btn-info btn-sm pull-right"><i class="fa fa-check"></i> Simpan</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
-		</td>
-		<td style="width:250px;" class="contentpane">
-			<h3>Panduan</h3>
-			<p>Isikanlah formulir disamping ini untuk menambahkan data program bantuan.	</p>
-			<p>
-				<ul>
-					<li>Kolom <strong>Sasaran Program</strong>
-					<p>Pilihlah salah satu dari sasaran program, apakah pribadi/perorangan, keluarga/kk, Rumah Tangga, ataupu Organisasi/kelompok warga</p>
-					</li>
-					<li>Kolom <strong>Nama Program</strong>
-					<p>Nama program wajib diisi</p>
-					</li>
-					<li>Kolom <strong>Keterangan Program</strong>
-					<p>Isikan keterangan program ini</p>
-					</li>
-				</ul>
-			</p>
-		</td>
-	</tr>
-</table>
-<script>
-$(document).ready(function () {
-    var daysToAdd = 4;
-    $("#sdate").datepicker({
-        onSelect: function (selected) {
-            var dtMax = new Date(selected);
-            dtMax.setDate(dtMax.getDate() + daysToAdd); 
-            var dd = dtMax.getDate();
-            var mm = dtMax.getMonth() + 1;
-            var y = dtMax.getFullYear();
-            var dtFormatted = mm + '/'+ dd + '/'+ y;
-            $("#edate").datepicker("option", "minDate", dtFormatted);
-        }
-    });
-    
-    $("#edate").datepicker({
-        onSelect: function (selected) {
-            var dtMax = new Date(selected);
-            dtMax.setDate(dtMax.getDate() - daysToAdd); 
-            var dd = dtMax.getDate();
-            var mm = dtMax.getMonth() + 1;
-            var y = dtMax.getFullYear();
-            var dtFormatted = mm + '/'+ dd + '/'+ y;
-            $("#sdate").datepicker("option", "maxDate", dtFormatted)
-        }
-    });
-});</script>
-
-<script type="text/javascript" src="<?php echo base_url()?>assets/tiny_mce/tiny_mce_src.js"></script>
-<script type="text/javascript">
-tinyMCE.init({
-        // General options
-		mode : "textareas",
-		theme : "advanced",
-		relative_urls: false,
-		language : "en",
-		skin : "o2k7",
-        plugins : "jbimages,lists,pagebreak,table,advlink,preview,paste,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras",
-
-        // Theme options
-        theme_advanced_buttons1 : "pastetext,pasteword,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,bullist,numlist,|,outdent,indent,blockquote,|,link,unlink,jbimages,cleanup,help,code,|,preview,|,forecolor,backcolor|,fullscreen",
-        theme_advanced_toolbar_location : "top",
-        theme_advanced_toolbar_align : "left",
-        theme_advanced_statusbar_location : "bottom",
-        theme_advanced_resizing : true,
-
-        // Skin options
-        skin : "o2k7",
-        skin_variant : "blue"
-});
-</script>
+		</div>
+	</section>
 </div>
+

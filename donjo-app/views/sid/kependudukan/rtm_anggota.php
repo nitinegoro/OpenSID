@@ -1,73 +1,151 @@
-<div id="pageC">
-	<table class="inner">
-	<tr style="vertical-align:top">
-	<td style="background:#fff;padding:0px;"> 
-<div id="contentpane">   
-<div class="content-header">
-</div> 
-	<form id="mainform" name="mainform" action="" method="post">
-    <div class="ui-layout-north panel">
-    <h3>Daftar Anggota Rumah Tangga : <?php echo $kepala_kk['nama']?> - <?php echo $kepala_kk['no_kk']?></h3>
-        <div class="left">
-            <div class="uibutton-group">
-                <a href="<?php echo site_url("rtm/ajax_add_anggota/$p/$o/$kk")?>" class="uibutton tipsy south" title="Tambah Data" target="ajax-modalx" rel="window"><span class="icon-plus icon-large">&nbsp;</span>Tambah Anggota</a>
-                <button type="button" title="Hapus Data" onclick="deleteAllBox('mainform','<?php echo site_url("rtm/delete_all_anggota/$p/$o/$kk")?>')" class="uibutton tipsy south"><span class="icon-trash icon-large">&nbsp;</span>Hapus Data</button>
-                <?php /*<a href="<?php echo site_url("rtm/lepas_anggota/$p/$o/$kk")?>" type="button" title="Lepas KK" class="uibutton tipsy south"  target="ajax-modal" rel="window" header="Lepas KK"><span class="ui-icon ui-icon-next">&nbsp;</span>Lepas KK</a>*/?>
-            </div>
-        </div>
-    </div>
-    <div class="ui-layout-center" id="maincontent" style="padding: 5px;">
-        <div class="table-panel top">
-            <div class="left">
-            </div>
-            <div class="right">
-            </div>
-        </div>
-        <table class="list">
-		<thead>
-            <tr>
-                <th>No</th>
-                <th><input type="checkbox" class="checkall"/></th>
-                <th width="80">Aksi</th>
-				<th width='100'>NIK</th>
-				<th>Nama</th>
-				<th width="150">Hubungan</th>
-				<th>Alamat</th>
-            
-			</tr>
-		</thead>
-		<tbody>
-        <?php  foreach($main as $data): ?>
-		<tr>
-          <td align="center" width="2"><?php echo $data['no']?></td>
-			<td align="center" width="5">
-				<input type="checkbox" name="id_cb[]" value="<?php echo $data['id']?>" />
-			</td>
-			<td>
-				<div class="uibutton-group">
-				<a href="<?php echo site_url("rtm/delete_anggota/$p/$o/$kk/$data[id]")?>" class="uibutton tipsy south" title="Hapus dari Ruta" target="confirm" message="Apakah Anda Yakin?" header="Hapus"><span class="icon-minus-sign icon-large"></span> Hapus</a>
-				<a href="<?php echo site_url("rtm/edit_anggota/$p/$o/$kk/$data[id]")?>" class="uibutton tipsy south" title="Ubah Hubungan rtm" target="ajax-modal" rel="window" header="Ubah Data"><span class="icon-link icon-large"></span></a>
+<?php
+/**
+ * File ini:
+ *
+ * View daftar anggota Rumah Tangga
+ *
+ * donjo-app/views/sid/kependudukan/rtm_anggota.php
+ *
+ */
+
+/**
+ *
+ * File ini bagian dari:
+ *
+ * OpenSID
+ *
+ * Sistem informasi desa sumber terbuka untuk memajukan desa
+ *
+ * Aplikasi dan source code ini dirilis berdasarkan lisensi GPL V3
+ *
+ * Hak Cipta 2009 - 2015 Combine Resource Institution (http://lumbungkomunitas.net/)
+ * Hak Cipta 2016 - 2020 Perkumpulan Desa Digital Terbuka (https://opendesa.id)
+ *
+ * Dengan ini diberikan izin, secara gratis, kepada siapa pun yang mendapatkan salinan
+ * dari perangkat lunak ini dan file dokumentasi terkait ("Aplikasi Ini"), untuk diperlakukan
+ * tanpa batasan, termasuk hak untuk menggunakan, menyalin, mengubah dan/atau mendistribusikan,
+ * asal tunduk pada syarat berikut:
+ * Pemberitahuan hak cipta di atas dan pemberitahuan izin ini harus disertakan dalam
+ * setiap salinan atau bagian penting Aplikasi Ini. Barang siapa yang menghapus atau menghilangkan
+ * pemberitahuan ini melanggar ketentuan lisensi Aplikasi Ini.
+ * PERANGKAT LUNAK INI DISEDIAKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN
+ * TERSIRAT. PENULIS ATAU PEMEGANG HAK CIPTA SAMA SEKALI TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN ATAU
+ * KEWAJIBAN APAPUN ATAS PENGGUNAAN ATAU LAINNYA TERKAIT APLIKASI INI.
+ *
+ * @package	OpenSID
+ * @author	Tim Pengembang OpenDesa
+ * @copyright	Hak Cipta 2009 - 2015 Combine Resource Institution (http://lumbungkomunitas.net/)
+ * @copyright	Hak Cipta 2016 - 2020 Perkumpulan Desa Digital Terbuka (https://opendesa.id)
+ * @license	http://www.gnu.org/licenses/gpl.html	GPL V3
+ * @link 	https://github.com/OpenSID/OpenSID
+ */
+?>
+
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>Daftar Anggota Rumah Tangga</h1>
+		<ol class="breadcrumb">
+			<li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('rtm/clear')?>"> Daftar Rumah Tangga</a></li>
+			<li class="active">Daftar Anggota Rumah Tangga</li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<div class="box box-info">
+			<div class="box-header with-border">
+				<a href="<?= site_url("rtm/ajax_add_anggota/$kk")?>" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Tambah Anggota Rumah Tangga" title="Tambah Anggota Dari Penduduk Yang Sudah Ada" class="btn btn-social btn-flat btn-success btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block"><i class='fa fa-plus'></i> Tambah Anggota</a>
+				<a href="#confirm-delete" title="Hapus Data" onclick="deleteAllBox('mainform','<?= site_url("rtm/delete_all_anggota/$kk")?>')" class="btn btn-social btn-flat	btn-danger btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block hapus-terpilih"><i class='fa fa-trash-o'></i> Hapus Data Terpilih</a>
+				<a href="<?= site_url("rtm/kartu_rtm/$kk")?>" class="btn btn-social btn-flat bg-purple btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block"><i class="fa fa-book"></i> Kartu Rumah Tangga</a>
+				<a href="<?= site_url("rtm/clear")?>" class="btn btn-social btn-flat btn-info btn-sm btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Kembali Ke Daftar Rumah Tangga">
+					<i class="fa fa-arrow-circle-left "></i>Kembali ke Daftar Rumah Tangga
+				</a>
+			</div>
+			<div class="box-body">
+				<h5><b>Rincian Keluarga</b></h5>
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped table-hover tabel-rincian">
+						<tbody>
+							<tr>
+								<td width="20%">Nomor Rumah Tangga (RT)</td>
+								<td width="1%">:</td>
+								<td><?= $kepala_kk['no_kk']?></td>
+							</tr>
+							<tr>
+								<td>Kepala Rumah Tangga</td>
+								<td>:</td>
+								<td><?= $kepala_kk['nama']?></td>
+							</tr>
+							<tr>
+								<td>Alamat</td>
+								<td>:</td>
+								<td><?= $kepala_kk['alamat_wilayah']?></td>
+							</tr>
+							<tr>
+								<td>
+									<?= ($program['programkerja']) ? anchor("program_bantuan/peserta/3/$kepala_kk[no_kk]", 'Program Bantuan', 'target="_blank"') : 'Program Bantuan'; ?>
+								</td>
+								<td>:</td>
+								<td>
+									<?php if($program['programkerja']): ?>
+										<?php foreach ($program['programkerja'] as $item): ?>
+											<?= anchor("program_bantuan/data_peserta/$item[peserta_id]", '<span class="label label-success">' . $item['nama'] . '</span>&nbsp;', 'target="_blank"'); ?>
+										<?php endforeach; ?>
+									<?php else: ?>
+										-
+									<?php endif; ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
-			</td>
-          <td><label><?php echo $data['nik']?></label></td>
-		  <td><label><?php echo strtoupper(unpenetration($data['nama']))?></label></td>
-          
-		  <td><?php echo $data['hubungan']?></td>
-          <td><?php echo unpenetration($data['alamat'])?></td>
-		  </tr>
-        <?php  endforeach; ?>
-		</tbody>
-        </table>
-    </div>
-	</form>
-    <div class="ui-layout-south panel bottom">
-        <div class="left"> 
-            <a href="<?php echo site_url("rtm/index/$p/$o")?>" class="uibutton icon prev">Kembali</a>
-        </div>
-        <div class="right">
-            <a href="<?php echo site_url("rtm/kartu_rtm/$p/$o/$kk")?>" class="uibutton confirm icon next">Kartu rtm</a>
-        </div>
-    </div>
+			</div>
+			<div class="box-body">
+				<h5><b>Daftar Anggota</b></h5>
+				<form id="mainform" name="mainform" action="" method="post">
+					<div class="table-responsive">
+						<table class="table table-bordered dataTable table-striped table-hover tabel-daftar">
+							<thead class="bg-gray disabled color-palette">
+								<tr>
+									<th><input type="checkbox" id="checkall"/></th>
+									<th>No</th>
+									<th>Aksi</th>
+									<th>NIK</th>
+									<th>Nomor KK</th>
+									<th width="25%">Nama</th>
+									<th>Jenis Kelamin</th>
+									<th width="35%">Alamat</th>
+									<th>Hubungan</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php if($main): ?>
+									<?php foreach ($main as $key => $data): ?>
+										<tr>
+											<td class="padat"><input type="checkbox" name="id_cb[]" value="<?= $data['id']?>" /></td>
+											<td class="padat"><?= ($key + 1); ?></td>
+											<td class="aksi">
+												<a href="<?= site_url("rtm/edit_anggota/$kk/$data[id]")?>" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Ubah Hubungan Rumah Tangga" title="Ubah Hubungan Rumah Tangga" class="btn bg-navy btn-flat btn-sm"><i class="fa fa-link"></i></a>
+												<a href="#" data-href="<?= site_url("rtm/delete_anggota/$kk/$data[id]")?>" class="btn bg-maroon btn-flat btn-sm" title="Hapus Data" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a>
+											</td>
+											<td><?= $data['nik']?></td>
+											<td><?= $data['no_kk']?></td>
+											<td nowrap><?= strtoupper($data['nama']); ?></td>
+											<td><?= $data['sex']?></td>
+											<td><?= $data['alamat']; ?></td>
+											<td nowrap><?= strtoupper($data['hubungan']); ?></td>
+										</tr>
+									<?php endforeach; ?>
+								<?php else: ?>
+									<tr>
+										<td class="text-center" colspan="9">Data Tidak Tersedia</td>
+									</tr>
+								<?php endif; ?>
+							</tbody>
+						</table>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
 </div>
-</td></tr></table>
-</div>
+<?php $this->load->view('global/confirm_delete');?>

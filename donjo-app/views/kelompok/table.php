@@ -1,133 +1,169 @@
+<?php
+
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+/*
+ * File ini:
+ *
+ * View daftar kelompok di modul Kelompok
+ *
+ * donjo-app/views/kelompok/table.php
+ *
+ */
+/*
+ * File ini bagian dari:
+ *
+ * OpenSID
+ *
+ * Sistem informasi desa sumber terbuka untuk memajukan desa
+ *
+ * Aplikasi dan source code ini dirilis berdasarkan lisensi GPL V3
+ *
+ * Hak Cipta 2009 - 2015 Combine Resource Institution (http://lumbungkomunitas.net/)
+ * Hak Cipta 2016 - 2020 Perkumpulan Desa Digital Terbuka (https://opendesa.id)
+ *
+ * Dengan ini diberikan izin, secara gratis, kepada siapa pun yang mendapatkan salinan
+ * dari perangkat lunak ini dan file dokumentasi terkait ("Aplikasi Ini"), untuk diperlakukan
+ * tanpa batasan, termasuk hak untuk menggunakan, menyalin, mengubah dan/atau mendistribusikan,
+ * asal tunduk pada syarat berikut:
+ *
+ * Pemberitahuan hak cipta di atas dan pemberitahuan izin ini harus disertakan dalam
+ * setiap salinan atau bagian penting Aplikasi Ini. Barang siapa yang menghapus atau menghilangkan
+ * pemberitahuan ini melanggar ketentuan lisensi Aplikasi Ini.
+ *
+ * PERANGKAT LUNAK INI DISEDIAKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN
+ * TERSIRAT. PENULIS ATAU PEMEGANG HAK CIPTA SAMA SEKALI TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN ATAU
+ * KEWAJIBAN APAPUN ATAS PENGGUNAAN ATAU LAINNYA TERKAIT APLIKASI INI.
+ *
+ * @package	OpenSID
+ * @author	Tim Pengembang OpenDesa
+ * @copyright	Hak Cipta 2009 - 2015 Combine Resource Institution (http://lumbungkomunitas.net/)
+ * @copyright	Hak Cipta 2016 - 2020 Perkumpulan Desa Digital Terbuka (https://opendesa.id)
+ * @license	http://www.gnu.org/licenses/gpl.html	GPL V3
+ * @link 	https://github.com/OpenSID/OpenSID
+ */
+?>
+
 <script>
 	$(function() {
-		var keyword = <?php echo $keyword?> ;
-		$( "#cari" ).autocomplete({
-			source: keyword
+		var keyword = <?= $keyword?> ;
+		$("#cari").autocomplete( {
+			source: keyword,
+			maxShowItems: 10,
 		});
 	});
 </script>
-
-<div id="pageC">
-	<table class="inner">
-<tr style="vertical-align:top">
-		<td style="background:#fff;padding:0px;">
-<div class="content-header">
-</div>
-<div id="contentpane">
-	<form id="mainform" name="mainform" action="" method="post">
-    <div class="ui-layout-north panel">
-    <h3>Modul kelompok</h3>
-        <div class="left">
-            <div class="uibutton-group">
-                <a href="<?php echo site_url('kelompok_master/clear')?>" class="uibutton tipsy south" title="Master Kelompok" ><span class="icon-list icon-large">&nbsp;</span>Kelola Master Kelompok</a>
-                <a href="<?php echo site_url('kelompok/form')?>" class="uibutton tipsy south" title="Tambah Data" ><span class="icon-plus-sign icon-large">&nbsp;</span>Tambah kelompok Baru</a>
-                <button type="button" title="Hapus Data" onclick="deleteAllBox('mainform','<?php echo site_url("kelompok/delete_all/$p/$o")?>')" class="uibutton tipsy south"><span class="icon-trash icon-large">&nbsp;</span>Hapus Data
-            </div>
-        </div>
-    </div>
-    <div class="ui-layout-center" id="maincontent" style="padding: 5px;">
-        <div class="table-panel top">
-            <div class="left">
-                <select name="filter" onchange="formAction('mainform','<?php echo site_url('kelompok/filter')?>')">
-                    <option value="">-- Filter by master --</option>
-					<?php  foreach($list_master AS $data){?>
-					<option value="<?php echo $data['id']?>" <?php if($filter == $data['id']) :?>selected<?php endif?>><?php echo $data['kelompok']?></option>
-					<?php  }?>
-                </select>
-            </div>
-            <div class="right">
-                <input name="cari" id="cari" type="text" class="inputbox help tipped" size="20" value="<?php echo $cari?>" title="Cari.." onkeypress="if (event.keyCode == 13) {$('#'+'mainform').attr('action','<?php echo site_url('kelompok/search')?>');$('#'+'mainform').submit();}" />
-                <button type="button" onclick="$('#'+'mainform').attr('action','<?php echo site_url('kelompok/search')?>');$('#'+'mainform').submit();" class="uibutton tipsy south"  title="Cari Data"><span class="icon-search icon-large">&nbsp;</span>Cari</button>
-            </div>
-        </div>
-        <table class="list">
-		<thead>
-            <tr>
-                <th width="10">No</th>
-                <th><input type="checkbox" class="checkall"/></th>
-                <th>Aksi</th>
-
-	 		<?php  if($o==4): ?>
-				<th align="left"><a href="<?php echo site_url("kelompok/index/$p/3")?>">Nama<span class="ui-icon ui-icon-triangle-1-n">&nbsp;</span></a></th>
-			<?php  elseif($o==3): ?>
-				<th align="left"><a href="<?php echo site_url("kelompok/index/$p/4")?>">Nama<span class="ui-icon ui-icon-triangle-1-s">&nbsp;</span></a></th>
-			<?php  else: ?>
-				<th align="left"><a href="<?php echo site_url("kelompok/index/$p/3")?>">Nama<span class="ui-icon ui-icon-triangle-2-n-s">&nbsp;</span></a></th>
-			<?php  endif; ?>
-
-                <th>Ketua Kelompok</th>
-			<?php  if($o==6): ?>
-				<th align="left" width='170'><a href="<?php echo site_url("kelompok/index/$p/5")?>">Master Kelompok<span class="ui-icon ui-icon-triangle-1-n">&nbsp;</span></a></th>
-			<?php  elseif($o==5): ?>
-				<th align="left" width='170'><a href="<?php echo site_url("kelompok/index/$p/6")?>">Master Kelompok<span class="ui-icon ui-icon-triangle-1-s">&nbsp;</span></a></th>
-			<?php  else: ?>
-				<th align="left" width='170'><a href="<?php echo site_url("kelompok/index/$p/5")?>">Master Kelompok<span class="ui-icon ui-icon-triangle-2-n-s">&nbsp;</span></a></th>
-			<?php  endif; ?>
-		</tr>
-		</thead>
-		<tbody>
-        <?php  foreach($main as $data): ?>
-		<tr>
-          <td align="center" width="2"><?php echo $data['no']?></td>
-			<td align="center" width="5">
-				<input type="checkbox" name="id_cb[]" value="<?php echo $data['id']?>" />
-			</td>
-          <td><div class="uibutton-group">
-          <a href="<?php echo site_url("kelompok/anggota/$data[id]")?>" class="uibutton tipsy south" title="Anggota Kelompok"><span class="icon-list icon-large"> Rincian </span></a>
-            <a href="<?php echo site_url("kelompok/form/$p/$o/$data[id]")?>" class="uibutton tipsy south" title="Ubah Data"><span class="icon-edit icon-large"> Ubah </span></a>
-            <a href="<?php echo site_url("kelompok/delete/$p/$o/$data[id]")?>" class="uibutton tipsy south" title="Hapus Data" target="confirm" message="Apakah Anda Yakin?" header="Hapus Data"><span class="icon-trash icon-large"></span></a>
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>Pengelolaan Kelompok</h1>
+		<ol class="breadcrumb">
+			<li><a href="<?= site_url('hom_sid'); ?>"><i class="fa fa-home"></i> Home</a></li>
+			<li class="active">Pengelolaan Kelompok</li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<form id="mainform" name="mainform" action="" method="post">
+			<div class="row">
+				<div class="col-md-3">
+					<div id="bantuan" class="box box-info">
+						<div class="box-header with-border">
+							<h3 class="box-title">Kategori Kelompok</h3>
+							<div class="box-tools">
+								<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+							</div>
+						</div>
+						<div class="box-body no-padding">
+							<ul class="nav nav-pills nav-stacked">
+								<?php foreach ($list_master AS $data): ?>
+									<li <?= jecho($filter, $data['id'], 'class="active"'); ?>>
+										<a href="<?= site_url("kelompok/to_master/$data[id]"); ?>"><?= $data['kelompok']; ?></a>
+									</li>
+								<?php endforeach; ?>
+								<li>
+									<a class="btn btn-flat bg-purple btn-sm" href="<?= site_url("kelompok_master/clear"); ?>"><i class="fa fa-plus"></i> Kelola Kategori Kelompok</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="box box-info">
+						<div class="box-header with-border">
+							<a href="<?= site_url('kelompok/form'); ?>" title="Tambah kelompok Baru" class="btn btn-social btn-flat bg-olive btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block"><i class="fa fa-plus"></i> Tambah Kelompok Baru</a>
+							<a href="#confirm-delete" title="Hapus Data" onclick="deleteAllBox('mainform','<?= site_url("kelompok/delete_all"); ?>')" class="btn btn-social btn-flat btn-danger btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block hapus-terpilih"><i class='fa fa-trash-o'></i> Hapus Data Terpilih</a>
+							<a href="<?= site_url("kelompok/dialog/cetak"); ?>" class="btn btn-social btn-flat bg-purple btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Cetak Data Kelompok"><i class="fa fa-print "></i> Cetak</a>
+							<a href="<?= site_url("kelompok/dialog/unduh"); ?>" class="btn btn-social btn-flat bg-navy btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" data-remote="false" data-toggle="modal" data-target="#modalBox" data-title="Unduh Data Kelompok"><i class="fa fa-download"></i> Unduh</a>
+							<a href="<?= site_url("{$this->controller}/clear"); ?>" class="btn btn-social btn-flat bg-purple btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block"><i class="fa fa-refresh"></i>Bersihkan</a>
+						</div>
+						<div class="box-body">
+							<div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+								<form id="mainform" name="mainform" action="" method="post">
+									<div class="row">
+										<div class="col-sm-9">
+											<select class="form-control input-sm" name="filter" onchange="formAction('mainform', '<?= site_url('kelompok/filter/filter'); ?>')">
+												<option value="">Kategori Kelompok</option>
+												<?php foreach ($list_master AS $data): ?>
+													<option value="<?= $data['id']; ?>" <?php selected($filter, $data['id']); ?> ><?= $data['kelompok']; ?></option>
+												<?php endforeach;?>
+											</select>
+										</div>
+										<div class="col-sm-3">
+											<div class="input-group input-group-sm pull-right">
+												<input name="cari" id="cari" class="form-control" placeholder="Cari..." type="text" value="<?=html_escape($cari); ?>" onkeypress="if (event.keyCode == 13){$('#'+'mainform').attr('action', '<?= site_url("kelompok/filter/cari"); ?>');$('#'+'mainform').submit();}">
+												<div class="input-group-btn">
+													<button type="submit" class="btn btn-default" onclick="$('#'+'mainform').attr('action', '<?= site_url("kelompok/filter/cari"); ?>');$('#'+'mainform').submit();"><i class="fa fa-search"></i></button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="table-responsive">
+										<table class="table table-bordered dataTable table-striped table-hover tabel-daftar">
+											<thead class="bg-gray disabled color-palette">
+												<tr>
+													<th><input type="checkbox" id="checkall"/></th>
+													<th>No</th>
+													<th>Aksi</th>
+													<th>Kode Kelompok</th>
+													<th width="50%"><?= url_order($o, "{$this->controller}/{$func}/$p", 1, 'Nama Kelompok'); ?></th>
+													<th><?= url_order($o, "{$this->controller}/{$func}/$p", 3, 'Ketua Kelompok'); ?></th>
+													<th><?= url_order($o, "{$this->controller}/{$func}/$p", 5, 'Kategori Kelompok'); ?></th>
+													<th>Jumlah Anggota</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php if ($main): ?>
+													<?php foreach ($main as $key => $data): ?>
+														<tr>
+															<td class="padat"><input type="checkbox" name="id_cb[]" value="<?= $data['id']; ?>" /></td>
+															<td class="padat"><?= ($key + $paging->offset + 1); ?></td>
+															<td class="aksi">
+																<a href="<?= site_url("kelompok/anggota/$data[id]"); ?>" class="btn bg-purple btn-flat btn-sm" title="Rincian Kelompok"><i class="fa fa-list-ol"></i></a>
+																<a href="<?= site_url("kelompok/form/$p/$o/$data[id]"); ?>" class="btn bg-orange btn-flat btn-sm" title="Ubah Data Kelompok"><i class='fa fa-edit'></i></a>
+																<a href="#" data-href="<?= site_url("kelompok/delete/$data[id]"); ?>" class="btn bg-maroon btn-flat btn-sm" title="Hapus Data" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a>
+															</td>
+															<td nowrap><?= $data['kode']; ?></td>
+															<td nowrap><?= $data['nama']; ?></td>
+															<td nowrap><?= $data['ketua']; ?></td>
+															<td><?= $data['master']; ?></td>
+															<td class="padat"><?= $data['jml_anggota']; ?></td>
+														</tr>
+													<?php endforeach; ?>
+												<?php else: ?>
+													<tr>
+														<td class="text-center" colspan="7">Data Tidak Tersedia</td>
+													</tr>
+												<?php endif; ?>
+											</tbody>
+										</table>
+									</div>
+								</form>
+								<?php $this->load->view('global/paging'); ?>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-          </td>
-          <td><?php echo $data['nama']?></td>
-		  <td><?php echo $data['ketua']?></td>
-		  <td><?php echo $data['master']?></td>
-		  </tr>
-        <?php  endforeach; ?>
-		</tbody>
-        </table>
-    </div>
-	</form>
-    <div class="ui-layout-south panel bottom">
-        <div class="left">
-		<div class="table-info">
-          <form id="paging" action="<?php echo site_url('kelompok')?>" method="post">
-		  <label>Tampilkan</label>
-            <select name="per_page" onchange="$('#paging').submit()" >
-              <option value="20" <?php  selected($per_page,20); ?> >20</option>
-              <option value="50" <?php  selected($per_page,50); ?> >50</option>
-              <option value="100" <?php  selected($per_page,100); ?> >100</option>
-            </select>
-            <label>Dari</label>
-            <label><strong><?php echo $paging->num_rows?></strong></label>
-            <label>Total Data</label>
-          </form>
-          </div>
-        </div>
-        <div class="right">
-            <div class="uibutton-group">
-            <?php  if($paging->start_link): ?>
-				<a href="<?php echo site_url("kelompok/index/$paging->start_link/$o")?>" class="uibutton"  >Awal</a>
-			<?php  endif; ?>
-			<?php  if($paging->prev): ?>
-				<a href="<?php echo site_url("kelompok/index/$paging->prev/$o")?>" class="uibutton"  >Prev</a>
-			<?php  endif; ?>
-            </div>
-            <div class="uibutton-group">
-
-				<?php  for($i=$paging->start_link;$i<=$paging->end_link;$i++): ?>
-				<a href="<?php echo site_url("kelompok/index/$i/$o")?>" <?php  jecho($p,$i,"class='uibutton special'")?> class="uibutton"><?php echo $i?></a>
-				<?php  endfor; ?>
-            </div>
-            <div class="uibutton-group">
-			<?php  if($paging->next): ?>
-				<a href="<?php echo site_url("kelompok/index/$paging->next/$o")?>" class="uibutton">Next</a>
-			<?php  endif; ?>
-			<?php  if($paging->end_link): ?>
-                <a href="<?php echo site_url("kelompok/index/$paging->end_link/$o")?>" class="uibutton">Akhir</a>
-			<?php  endif; ?>
-            </div>
-        </div>
-    </div>
+		</form>
+	</section>
 </div>
-</td></tr></table>
-</div>
+<?php $this->load->view('global/confirm_delete'); ?>

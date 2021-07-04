@@ -1,92 +1,93 @@
-<?php
-/*
- * program.php
- *
- * Backend View untuk Program Bantuan
- *
- * Copyright 2015 Isnu Suntoro <isnusun@gmail.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- *
- *
- */
-
-?>
-<div id="pageC">
-<table class="inner">
-	<tr style="vertical-align:top">
-		<td class="side-menu">
-		<?php
-		$this->load->view('program_bantuan/menu_kiri.php')
-		?>
-		</td>
-		<td class="contentpane">
-			<div id="contentpane">
-				<div class="ui-layout-center" id="maincontent">
-					<?php
-					if($tampil == 0){
-						echo "<legend>Daftar Program Bantuan</legend>";
-					}else{
-						echo "<legend>Daftar Program Bantuan dengan Sasaran ".$sasaran[$tampil]."</legend>";
-					}
-
-					if($_SESSION["success"]==1){
-						echo "
-						<div>
-						".$_SESSION["pesan"]."
-						</div>";
-						$_SESSION["success"]==0;
-					}
-
-					?>
-
-					<div class="table-panel top">
-						<table class="list">
-							<thead><tr><th>#</th><th></th><th>Nama Program</th><th>Masa Berlaku</th><th>Sasaran</th></tr></thead>
-							<tbody>
-							<?php
-							$nomer = 0;
-							foreach ($program as $item):
-								$nomer++;
-							?>
-								<tr>
-									<td class="angka" style="width:40px;"><?php echo $nomer; ?></td>
-									<td style="width:120px;">
-										<div class="uibutton-group">
-											<a class="uibutton tipsy south" href="<?php echo site_url('program_bantuan/detail/1/'.$item["id"].'/'); ?>" title="Detail"><span class="icon-list icon-large"></span> Detail</a>
-											<a class="uibutton tipsy south" href="<?php echo site_url('program_bantuan/edit/'.$item["id"].'/'); ?>" title="Ubah"><span class="icon-pencil icon-large"></span></a>
-											<a class="uibutton tipsy south" href="<?php echo site_url('program_bantuan/hapus/'.$item["id"].'/'); ?>" title="Hapus Data" target="confirm" message="Apakah Anda Yakin?" header="Hapus Data"><span class="icon-trash icon-large"></span></a>
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>Daftar Program Bantuan</h1>
+		<ol class="breadcrumb">
+			<li><a href="<?=site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li class="active">Daftar Program Bantuan</li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box box-info">
+					<div class="box-header with-border">
+						<a href="<?=site_url('program_bantuan/create')?>" class="btn btn-social btn-flat bg-olive btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Tambah Program Bantuan"><i class="fa fa-plus"></i> Tambah</a>
+						<a href="<?=site_url('program_bantuan/impor')?>" class="btn btn-social btn-flat bg-navy btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Impor Program Bantuan" data-target="#impor" data-remote="false" data-toggle="modal" data-backdrop="false" data-keyboard="false"><i class="fa fa-upload"></i> Impor</a>
+						<a href="<?=site_url('program_bantuan/panduan')?>" class="btn btn-social btn-flat btn-info btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Panduan"><i class="fa fa-question-circle"></i> Panduan</a>
+						<?php if ($tampil != 0): ?>
+							<a href="<?=site_url('program_bantuan')?>" class="btn btn-social btn-flat btn-info btn-sm visible-xs-block visible-sm-inline-block visible-md-inline-block visible-lg-inline-block" title="Kembali Ke Daftar Program Bantuan"><i class="fa fa-arrow-circle-o-left"></i> Kembali Ke Daftar Program Bantuan</a>
+						<?php endif; ?>
+					</div>
+					<div class="box-body">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+									<div class="row">
+										<div class="col-sm-9">
+											<form id="mainform" name="mainform" action="" method="post">
+												<select class="form-control input-sm" name="sasaran" onchange="formAction('mainform', '<?=site_url('program_bantuan/filter/sasaran')?>')">
+													<option value="">Pilih Sasaran</option>
+													<?php foreach ($list_sasaran AS $key => $value): ?>
+														<option value="<?= $key; ?>" <?= selected($set_sasaran, $key); ?>><?= $value?></option>
+													<?php endforeach; ?>
+												</select>
+											</form>
 										</div>
-									</td>
-									<td><a href="<?php echo site_url('program_bantuan/detail/1/'.$item["id"].'/')?>"><?php echo $item["nama"] ?></a></td>
-									<td><?php echo fTampilTgl($item["sdate"],$item["edate"]);?></td>
-									<td><a href="<?php echo site_url('program_bantuan/sasaran/'.$item["sasaran"].'/'.$sasaran[$item["sasaran"]].'')?>"><?php echo $sasaran[$item["sasaran"]]?></a></td>
-								</tr>
-							<?php endforeach ?>
-							</tbody>
-						</table>
+										<div class="col-sm-12">
+											<div class="table-responsive">
+												<table class="table table-bordered table-striped dataTable table-hover" id="table-program">
+													<thead class="bg-gray disabled color-palette">
+														<tr>
+															<th width="1%">No</th>
+															<th width="5%">Aksi</th>
+															<th nowrap>Nama Program</th>
+															<th>Asal Dana</th>
+															<th>Jumlah Peserta</th>
+															<th nowrap>Masa Berlaku</th>
+															<th>Sasaran</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<?php $nomer = $paging->offset; ?>
+														<?php foreach ($program as $item): ?>
+															<?php $nomer++; ?>
+															<tr>
+																<td class="text-center"><?= $nomer?></td>
+																<td nowrap>
+																	<a href="<?= site_url("program_bantuan/detail/$item[id]")?>" class="btn bg-purple btn-flat btn-sm" title="Rincian"><i class="fa fa-list"></i></a>
+																	<a href="<?= site_url("program_bantuan/edit/$item[id]")?>" class="btn bg-orange btn-flat btn-sm" title="Ubah"><i class="fa fa-edit"></i></a>
+																	<?php if ($item['jml_peserta'] != 0): ?>
+																		<a href="<?= site_url("program_bantuan/expor/$item[id]"); ?>" class="btn bg-navy btn-flat btn-sm" title="Expor"><i class="fa fa-download"></i></a>
+																		<a href="#" class="btn bg-maroon btn-flat btn-sm disabled" title="Hapus" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a>
+																	<?php endif ?>
+																	<?php if ($item['jml_peserta'] == 0): ?>
+																		<a href="#" data-href="<?= site_url("program_bantuan/hapus/$item[id]")?>" class="btn bg-maroon btn-flat btn-sm" title="Hapus" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a>
+																	<?php endif ?>
+																</td>
+																<td nowrap><a href="<?= site_url("program_bantuan/detail/$item[id]")?>"><?= $item["nama"] ?></a></td>
+																<td><?= $item['asaldana']?></td>
+																<td><?= $item['jml_peserta']?></td>
+																<td nowrap><?= fTampilTgl($item["sdate"],$item["edate"]);?></td>
+																<td nowrap><?= $sasaran[$item["sasaran"]]?></td>
+																<td><?= $item['status'] ?></td>
+															</tr>
+														<?php endforeach; ?>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+									<?php $this->load->view('global/paging');?>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
-		</td>
-		<td style="width:250px;" class="contentpane">
-		<?php
-		$this->load->view('program_bantuan/panduan.php');
-		?>
-		</td>
-	</tr>
-</table>
+		</div>
+	</section>
 </div>
+<?php $this->load->view('global/confirm_delete');?>
+
+<?php include('donjo-app/views/program_bantuan/impor.php'); ?>

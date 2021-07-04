@@ -1,50 +1,43 @@
-<?php
-/*
- * program.php
- * 
- * Backend View untuk Program Bantuan
- * 
- * Copyright 2015 Isnu Suntoro <isnusun@gmail.com>
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- * 
- * 
- */
+<div class="content-wrapper">
+	<section class="content-header">
+		<h1>Panduan Data C-Desa <?=ucwords($this->setting->sebutan_desa)?> <?= $desa["nama_desa"];?></h1>
+		<ol class="breadcrumb">
+			<li><a href="<?= site_url('hom_sid')?>"><i class="fa fa-home"></i> Home</a></li>
+			<li><a href="<?= site_url('data_persil/clear')?>"> Daftar Persil</a></li>
+			<li class="active">Panduan Persil</li>
+		</ol>
+	</section>
+	<section class="content" id="maincontent">
+		<form id="mainform" name="mainform" action="" method="post">
+			<div class="row">
+				<div class="col-md-3">
+          <?php $this->load->view('data_persil/menu_kiri.php')?>
+				</div>
+				<div class="col-md-9">
+					<div class="box box-info">
+						<div class="box-body">
+							<h4>Keterangan</h4>
+							<p><strong>Modul Data C-Desa</strong> adalah modul untuk pengelolaan data tentang kepemilikan lahan, termasuk riwayat kepemilikan.</p>
+							<h4>Panduan</h4>
+							<p>Secara garis besar, proses pengisian data C-Desa adalah sebagai berikut:</p>
+							<p>
+								<ol>
+									<li>Buat <strong>C-Desa</strong>
+										<p>Buat satu C-Desa untuk setiap penduduk yang akan dicatat kepemilikan lahannya. Setiap C-Desa digunakan untuk mencatat semua kepemilikan lahan penduduk tersebut.</p>
+									</li>
+									<li>Buat <strong>Persil</strong>
+										<p>Persil berisi keterangan lahan yang dimiliki penduduk dan dicatat dalam C-Desa pemilik. Beberapa pemilik bisa mempunyai lahan di persil yang sama. Beberapa persil dapat mempunyai Nomor Persil yang sama. Untuk membedakan, isi juga Nomor Urut Bidang yang unik untuk Persil ybs. Pemilik awal suatu persil dicatat dengan masukkan C-Desa pemilik ybs.</p>
+									</li>
+									<li>Buat <strong>Mutasi Persil</strong>
+										<p>Buat mutasi untuk setiap pergantian kepemilikan suatu lahan. Mutasi dapat dilakukan untuk sebagian dari luas suatu persil.</p>
+									</li>
+								</ol>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</section>
+</div>
 
-?>
-<h4>Keterangan</h4>
-<p><strong>Modul Data Persil</strong> adalah modul untuk pengelolaan data dokumen tentang kepemilikan lahan.</p>
-<h4>Panduan</h4>
-<p>Cara menyimpan/memperbarui data Persil adalah dengan mengisikan formulir yang terdapat dari menu Tulis Data Persil Baru:</p>
-<p>
-	<ol>
-		<li>Kolom <strong>Data Pemilik</strong>
-			<p>Tuliskan NIK atau Nama Pemilik Persil. Sistem akan memberikan pilihan sesuai dengan data yang tersimpan di SID</p>
-		</li>
-		<li>Kolom <strong>Nomor Persil</strong>
-			<p>Nomor Persil wajib diisi</p>
-		</li>
-		<li>Kolom <strong>Keterangan Surat</strong>
-			<p>Pilih sesuai dengan jenis surat persil</p>
-		</li>
-		<li>Kolom <strong>Luas Tanah</strong>
-			<p>Isikan dengan menggunakan angka saja. Bila data luasan tidak bulat, gunakan tanda titik(.) untuk menggantikan data koma pada nilai desimal. Nilai luasan dalam satuan meter persegi (m<sup>2</sup>)</p>
-		</li>
-		<li>Kolom <strong>Nomor SPPT PBB</strong>
-			<p>Isikan sesuai dengan data nomor SPPT PBB atas persil tersebut</p>
-		</li>
-	</ol>
-</p>

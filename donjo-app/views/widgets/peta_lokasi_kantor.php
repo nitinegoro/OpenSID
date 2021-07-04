@@ -1,57 +1,119 @@
+<style type="text/css">
+	button.btn {
+		margin-left: 0px;
+	}
+
+	#collapse2 {
+		margin-top: 5px;
+	}
+
+	button[aria-expanded=true] .fa-chevron-down {
+		display: none;
+	}
+
+	button[aria-expanded=false] .fa-chevron-up {
+		display: none;
+	}
+
+	.tabel-info {
+		width: 100%;
+	}
+
+	.tabel-info, tr {
+		border-bottom: 1px;
+		border: 0px solid;
+	}
+
+	.tabel-info, td {
+		border: 0px solid;
+		height: 30px;
+		padding: 5px;
+	}
+
+</style>
 <!-- widget Peta Lokasi Kantor Desa -->
-<?php
-if($data_config['lat']!= "0"){
-  echo "
+<div class="box box-primary box-solid">
+	<div class="box-header">
+		<h3 class="box-title">
+			<i class="fa fa-map-marker"></i><?="Lokasi Kantor ".ucwords($this->setting->sebutan_desa)?>
+		</h3>
+	</div>
+	<div class="box-body">
+		<div id="map_canvas" style="height:200px;"></div>
+		<button class="btn btn-success btn-block"><a href="https://www.openstreetmap.org/#map=15/<?=$data_config['lat']."/".$data_config['lng']?>" style="color:#fff;" target="_blank">Buka Peta</a></button>
+		<button class="btn btn-success btn-block" data-toggle="collapse" data-target="#collapse2" aria-expanded="false">
+			Detail
+			<i class="fa fa-chevron-up pull-right"></i>
+			<i class="fa fa-chevron-down pull-right"></i>
+		</button>
+		<div id="collapse2" class="panel-collapse collapse">
+			<br>
+			<?php if (is_file(FCPATH . LOKASI_LOGO_DESA . $desa['kantor_desa'])): ?>
+				<img class="img-responsive" src="<?=gambar_desa($desa['kantor_desa'], TRUE)?>" alt="Kantor Desa">
+				<hr>
+			<?php endif; ?>
+			<div class="info-desa">
+				<table class="table-info">
+					<tr>
+						<td width="25%">Alamat</td>
+						<td>:</td>
+						<td width="70%"><?=$desa['alamat_kantor']?></td>
+					</tr>
+					<tr>
+						<td width="25%"><?=ucwords($this->setting->sebutan_desa)." "?></td>
+						<td>:</td>
+						<td width="70%"><?=$desa['nama_desa']?></td>
+					</tr>
+					<tr>
+						<td width="25%"><?=ucwords($this->setting->sebutan_kecamatan)?></td>
+						<td>:</td>
+						<td width="70%"><?=$desa['nama_kecamatan']?></td>
+					</tr>
+					<tr>
+						<td width="25%"><?=ucwords($this->setting->sebutan_kabupaten)?></td>
+						<td>:</td>
+						<td width="70%"><?=$desa['nama_kabupaten']?></td>
+					</tr>
+					<tr>
+						<td width="25%">Kodepos</td>
+						<td>:</td>
+						<td width="70%"><?=$desa['kode_pos']?></td>
+					</tr>
+					<tr>
+						<td width="25%">Telepon</td>
+						<td>:</td>
+						<td width="70%"><?=$desa['telepon']?></td>
+					</tr>
+					<tr>
+						<td width="25%">Email</td>
+						<td>:</td>
+						<td width="70%"><?=$desa['email_desa']?></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 
-  <div class=\"box box-default box-solid\">
-    <div class=\"box-header\">
-      <h3 class=\"box-title\"><i class=\"fa fa-map-marker\"></i> Lokasi ". $desa["nama_desa"] ."</h3>
-    </div>
-    <div class=\"box-body\">
-      <div id=\"map_canvas\" style=\"height:200px;\"></div>
-      <script type=\"text/javascript\" src=\"http://maps.googleapis.com/maps/api/js?key=". config_item('google_key') ."\"></script>";
-      ?>
-      <script type="text/javascript">
-        var map;
-        var marker;
-        var location;
+<script>
+	//Jika posisi kantor desa belum ada, maka posisi peta akan menampilkan seluruh Indonesia
+	<?php if (!empty($data_config['lat']) && !empty($data_config['lng'])): ?>
+		var posisi = [<?=$data_config['lat'].",".$data_config['lng']?>];
+		var zoom = <?=$data_config['zoom'] ?: 10?>;
+	<?php else: ?>
+		var posisi = [-1.0546279422758742,116.71875000000001];
+		var zoom = 10;
+	<?php endif; ?>
 
-        function initialize(){
-          var myLatlng = new google.maps.LatLng(<?php echo $data_config['lat'].",".$data_config['lng']; ?>);
-          var myOptions = {
-            zoom: <?php echo $data_config["zoom"];?>,
-            center: myLatlng,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            overviewMapControl: true
-          }
-          map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+	var lokasi_kantor = L.map('map_canvas').setView(posisi, zoom);
 
-            var marker = new google.maps.Marker({
-              position: new google.maps.LatLng(<?php echo $data_config['lat'].",".$data_config['lng']; ?>),
-              map: map,
-              draggable:false
-              });               }
+	//Menampilkan BaseLayers Peta
+	var baseLayers = getBaseLayers(lokasi_kantor, '<?=$this->setting->google_key?>');
 
-        function addEvent(obj, evType, fn){
-         if (obj.addEventListener){
-           obj.addEventListener(evType, fn, false);
-           return true;
-         } else if (obj.attachEvent){
-           var r = obj.attachEvent("on"+evType, fn);
-           return r;
-         } else {
-           return false;
-         }
-        }
-        addEvent(window, 'load',initialize);
+	L.control.layers(baseLayers, null, {position: 'topright', collapsed: true}).addTo(lokasi_kantor);
 
-
-      </script>
-    <?php
-    echo "
-      <a href=\"//www.google.co.id/maps/@".$data_config['lat'].",".$data_config['lng']."z?hl=id\" target=\"_blank\">tampilkan dalam peta lebih besar</a><br />
-    </div>
-  </div>
-  ";
-}
-?>
+	//Jika posisi kantor desa belum ada, maka posisi peta akan menampilkan seluruh Indonesia
+	<?php if (!empty($data_config['lat']) && !empty($data_config['lng'])): ?>
+		var kantor_desa = L.marker(posisi).addTo(lokasi_kantor);
+	<?php endif; ?>
+</script>
